@@ -32,7 +32,7 @@ function Dashboard({ showToast }) {
   };
 
   return (
-    <div className="landing">
+    <div className="  ">
       <NavBar onSelect={setCurrentSection} />
 
       <div className="exibeContent">

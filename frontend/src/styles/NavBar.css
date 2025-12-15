@@ -227,6 +227,7 @@
     transition: width 0.3s ease;
     overflow: hidden;
     font-family: 'Inter';
+    z-index: 9999;
   }
 
   .sidebar.open {

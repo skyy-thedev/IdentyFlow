@@ -4,8 +4,8 @@
     bottom: 1vh;
     right: 1vw;
     flex-direction: row;
-    overflow-x: hidden;
     justify-content: center;
+    overflow: visible;
 
     /* 🎨 Fundo vidro azul translúcido */
     background: rgba(0, 120, 255, 0.15); 
