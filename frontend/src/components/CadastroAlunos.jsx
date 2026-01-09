@@ -1,63 +1,176 @@
-import '../styles/CadastroAlunos.css';
+import { useState } from "react";
+import api from "../services/api";
+import "../styles/CadastroAlunos.css";
 
 export default function CadastroAlunos() {
+  const [formData, setFormData] = useState({
+    nome: "",
+    dataNascimento: "",
+    cpf: "",
+    rg: "",
+    telefone: "",
+    email: "",
+    dataCadastro: "",
+    endereco: "",
+    escolaridade: "",
+    cursos: [],
+  });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+  function handleCheckboxChange(curso) {
+    setFormData((prev) => ({
+      ...prev,
+      cursos: prev.cursos.includes(curso)
+        ? prev.cursos.filter((c) => c !== curso)
+        : [...prev.cursos, curso],
+    }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      await api.post("/alunos", formData);
+      alert("Aluno cadastrado com sucesso!");
+
+      setFormData({
+        nome: "",
+        dataNascimento: "",
+        cpf: "",
+        rg: "",
+        telefone: "",
+        email: "",
+        dataCadastro: "",
+        endereco: "",
+        escolaridade: "",
+        cursos: [],
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao cadastrar aluno");
+    }
+  }
+
   return (
     <div className="page">
       <div className="card">
         <h1>CADASTRO</h1>
-        <form>
+
+        <form className="form" onSubmit={handleSubmit}>
+          {/* Nome */}
           <div className="full-width">
-            <label>Nome completo</label>
-            <input type="text" />
+            <label htmlFor="nome">Nome completo</label>
+            <input
+              id="nome"
+              name="nome"
+              value={formData.nome}
+              onChange={handleChange}
+            />
           </div>
 
+          {/* Dados pessoais */}
           <div className="grid grid-3">
             <div>
-              <label>Data de Nascimento</label>
-              <input type="date" />
+              <label htmlFor="dataNascimento">Data de Nascimento</label>
+              <input
+                id="dataNascimento"
+                type="date"
+                name="dataNascimento"
+                value={formData.dataNascimento}
+                onChange={handleChange}
+              />
             </div>
+
             <div>
-              <label>CPF</label>
-              <input type="text" />
+              <label htmlFor="cpf">CPF</label>
+              <input
+                id="cpf"
+                name="cpf"
+                value={formData.cpf}
+                onChange={handleChange}
+              />
             </div>
+
             <div>
-              <label>RG</label>
-              <input type="text" />
+              <label htmlFor="rg">RG</label>
+              <input
+                id="rg"
+                name="rg"
+                value={formData.rg}
+                onChange={handleChange}
+              />
             </div>
           </div>
 
+          {/* Contato */}
           <div className="grid grid-3">
             <div>
-              <label>Telefone</label>
-              <input type="tel" />
+              <label htmlFor="telefone">Telefone</label>
+              <input
+                id="telefone"
+                name="telefone"
+                value={formData.telefone}
+                onChange={handleChange}
+              />
             </div>
+
             <div>
-              <label>E-mail</label>
-              <input type="email" />
+              <label htmlFor="email">E-mail</label>
+              <input
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
             </div>
+
             <div>
-              <label>Data de Cadastro</label>
-              <input type="date" />
+              <label htmlFor="dataCadastro">Data de Cadastro</label>
+              <input
+                id="dataCadastro"
+                type="date"
+                name="dataCadastro"
+                value={formData.dataCadastro}
+                onChange={handleChange}
+              />
             </div>
           </div>
 
-          <div className="grid grid-2">
-            <div>
-              <label>Endereço</label>
-              <input type="text" />
-            </div>
-          </div>
-
+          {/* Endereço */}
           <div className="full-width">
-            <label>Grau de Escolaridade</label>
-            <select>
-              <option>Selecione</option>
+            <label htmlFor="endereco">Endereço</label>
+            <input
+              id="endereco"
+              name="endereco"
+              value={formData.endereco}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Escolaridade */}
+          <div className="full-width">
+            <label htmlFor="escolaridade">Grau de Escolaridade</label>
+            <select
+              id="escolaridade"
+              name="escolaridade"
+              value={formData.escolaridade}
+              onChange={handleChange}
+            >
+              <option value="">Selecione</option>
               <option>Ensino Fundamental</option>
               <option>Ensino Médio</option>
               <option>Ensino Superior</option>
             </select>
           </div>
 
+          {/* Cursos */}
           <div className="form-group">
             <label>Curso Escolhido</label>
             <div className="checkbox-grid">
@@ -71,11 +184,17 @@ export default function CadastroAlunos() {
                 "Maquiagem Profissional",
               ].map((curso) => (
                 <label key={curso} className="checkbox">
-                  <input type="checkbox" /> {curso}
+                  <input
+                    type="checkbox"
+                    checked={formData.cursos.includes(curso)}
+                    onChange={() => handleCheckboxChange(curso)}
+                  />
+                  {curso}
                 </label>
               ))}
             </div>
           </div>
+
           <button type="submit">Cadastrar Aluno</button>
         </form>
       </div>
