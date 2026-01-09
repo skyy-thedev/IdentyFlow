@@ -17,6 +17,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 900px;
   background: #ffffff;
   padding: 10px;
   border-radius: 19px;
@@ -50,17 +51,21 @@ label {
   grid-column: 1 / -1;
 }
 
-
 input,
 select {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
-  background: #2a2a2a;
-  color: #000;
   border: 1px solid #ccc;
   outline: none;
-  
+  text-align: center;
+}
+
+input#nome, #email, #telefone, #dataNascimento, #cpf, #rg, #endereco, #dataCadastro, #escolaridade {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  background: #ccc;
+  color: black;
 }
 
 input:focus,
@@ -71,21 +76,25 @@ select:focus {
 .form {
   box-shadow:none;
   display: flex;
+  align-self: center;
+  max-width: 80vw;
   flex-direction: column;
+  color: #000;
   gap: 18px;
   font-family: 'Poppins', sans-serif;
 }
 
 .form-group {
-  margin-bottom: 18px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
 }
 
 .grid {
   display: grid;
-  gap: 16px;
-  margin-bottom: 18px;
+  max-width: 100vw;
+  gap: 3vh;
+  margin: 0 auto;
 }
 
 .grid-2 {
@@ -99,42 +108,31 @@ select:focus {
 .checkbox-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 8px;
+  gap: 4px;
 }
 
 .checkbox {
   font-weight: normal;
 }
 
-.assinaturas {
-  display: flex;
-  gap: 40px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-
-.linha {
-  border-top: 1px solid #000;
+.cadastro-btn {
+  align-self: center;
   margin-top: 30px;
-}
-
-button {
-  margin-top: 30px;
-  width: 100%;
+  width: 30%;
   padding: 14px;
-  font-size: 16px;
+  font-size: 20px;
   border-radius: 10px;
   border: none;
-  background: #2e7d32;
+  background: #4a90e2;
   color: white;
   cursor: pointer;
 
   /* sombra no botão */
-  box-shadow: 0 6px 14px rgba(46, 125, 50, 0.4);
+  box-shadow: 0 3px 14px #000;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-button:hover {
+.cadastro-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(46, 125, 50, 0.45);
+  box-shadow: 0 6px 20px #000;
 }

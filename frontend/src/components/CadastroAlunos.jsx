@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../services/api";
 import "../styles/CadastroAlunos.css";
 
@@ -15,6 +15,15 @@ export default function CadastroAlunos() {
     escolaridade: "",
     cursos: [],
   });
+
+  useEffect(() => {
+    const hoje = new Date();
+    const dataFormatada = hoje.toISOString().split("T")[0]; // yyyy-mm-dd
+    setFormData((prev) => ({
+      ...prev,
+      dataCadastro: dataFormatada,
+    }));
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -195,7 +204,7 @@ export default function CadastroAlunos() {
             </div>
           </div>
 
-          <button type="submit">Cadastrar Aluno</button>
+          <button type="submit" className="cadastro-btn">Cadastrar Aluno</button>
         </form>
       </div>
     </div>
