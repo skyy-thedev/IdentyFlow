@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
+import axios from "axios";
 import "../styles/CadastroAlunos.css";
 
-export default function CadastroAlunos() {
+
+export default function CadastroAlunos({ showToast }) {
   const [formData, setFormData] = useState({
     nome: "",
     dataNascimento: "",
@@ -17,6 +19,9 @@ export default function CadastroAlunos() {
   });
 
   const [documento, setDocumento] = useState("");
+  const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [cursos, setCursos] = useState("");
 
   useEffect(() => {
     const hoje = new Date();
@@ -131,11 +136,35 @@ export default function CadastroAlunos() {
         cursos: [],
       });
       setDocumento("");
+      console.log(formData);
     } catch (error) {
       console.error(error);
       alert("Erro ao cadastrar aluno");
     }
   }
+
+  useEffect(() => {
+    const fetchCursos = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get("http://localhost:5000/cursos", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setCursos(res.data.cursos);
+      } catch (err) {
+        console.error(err);
+        setErro("Não foi possível carregar os cursos.");
+        showToast("Erro ao carregar cursos.", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCursos();
+  }, [showToast]);
+
 
   return (
     <div className="page">
@@ -246,28 +275,32 @@ export default function CadastroAlunos() {
 
           {/* 4ª linha - Cursos */}
           <div className="form-group">
-            <label>Curso Escolhido</label>
-            <div className="checkbox-grid">
-              {[
-                "Manicure e Pedicure",
-                "Spa dos Pés",
-                "Cabeleireira Profissional",
-                "Alongamento em Unhas",
-                "Trancista Profissional",
-                "Design em Sobrancelhas",
-                "Maquiagem Profissional",
-              ].map((curso) => (
-                <label key={curso} className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={formData.cursos.includes(curso)}
-                    onChange={() => handleCheckboxChange(curso)}
-                  />
-                  {curso}
-                </label>
-              ))}
-            </div>
+            <label>Curso(s) Escolhido(s)</label>
+          <div className="checkbox-grid">
+            {loading ? (
+              <p>Carregando cursos...</p>
+            ) : erro ? (
+              <p className="erro">{erro}</p>
+            ) : cursos.length > 0 ? (
+              cursos.map((curso) => {
+                const nomeCurso = curso.nome || curso;
+                return (
+                  <label key={nomeCurso} className="checkbox">
+                    <input
+                      type="checkbox"
+                      className="checkbox-round"
+                      checked={formData.cursos.includes(nomeCurso)}
+                      onChange={() => handleCheckboxChange(nomeCurso)}
+                    />
+                    {nomeCurso}
+                  </label>
+                );
+              })
+            ) : (
+              <p>Nenhum curso disponível.</p>
+            )}
           </div>
+        </div>
 
           <button type="submit" className="cadastro-btn">
             Finalizar Cadastro

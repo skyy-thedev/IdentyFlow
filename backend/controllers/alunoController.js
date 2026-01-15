@@ -11,3 +11,15 @@ exports.cadastrarAluno = async (req, res) => {
     });
   }
 };
+
+exports.turmas = async (req, res) => {
+  try {
+    const alunos = await Aluno.find();
+    res.status(200).json({ alunos });
+  } catch (error) {
+    res.status(500).json({
+      message: "Erro ao buscar turmas",
+      error: error.message,
+    });
+  }
+};

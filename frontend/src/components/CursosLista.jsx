@@ -9,27 +9,27 @@ export default function CursosLista({ showToast }) {
   const [erro, setErro] = useState(null);
   const [showAddCurso, setShowAddCurso] = useState(false);
 
-  const fetchCursos = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const res = await axios.get("http://localhost:5000/cursos", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      setCursos(res.data.cursos);
-    } catch (err) {
-      console.error(err);
-      setErro("Não foi possível carregar os cursos.");
-      showToast("Erro ao carregar cursos.", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchCursos = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get("http://localhost:5000/cursos", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setCursos(res.data.cursos);
+      } catch (err) {
+        console.error(err);
+        setErro("Não foi possível carregar os cursos.");
+        showToast("Erro ao carregar cursos.", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchCursos();
-  }, []);
+  }, [showToast]);
 
   if (loading) return <p className="loading">Carregando cursos...</p>;
   if (erro) return <p className="erro">{erro}</p>;
@@ -49,10 +49,19 @@ export default function CursosLista({ showToast }) {
             <button className="modal-close" onClick={() => setShowAddCurso(false)}>×</button>
 
             <AddCurso
-              onCursoAdded={() => {
-                fetchCursos();
-                setShowAddCurso(false);
-                showToast("Curso criado com sucesso!", "success");
+              onCursoAdded={async () => {
+                const token = localStorage.getItem("token");
+                try {
+                  const res = await axios.get("http://localhost:5000/cursos", {
+                    headers: { Authorization: `Bearer ${token}` }
+                  });
+                  setCursos(res.data.cursos);
+                  setShowAddCurso(false);
+                  showToast("Curso criado com sucesso!", "success");
+                } catch (err) {
+                  console.error(err);
+                  showToast("Erro ao carregar cursos.", "error");
+                }
               }}
               onClose={() => setShowAddCurso(false)}
             />

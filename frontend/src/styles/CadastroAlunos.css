@@ -88,6 +88,31 @@ select:focus {
   gap: 8px;
 }
 
+.checkbox-round {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color:#ffffff;
+  border: 2px solid #050505;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 0.5vw;
+  height: 0.5vh;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  vertical-align: middle;
+  margin-right: 6px;
+  box-shadow: none;
+}
+
+/* Quando estiver selecionado */
+.checkbox-round:checked {
+  background-color: #1F2A48; /* cor azul padrão, pode mudar */
+  border-color: #20354b;
+}
+
+/* Pontinho interno */
+
+
 .cadastro-btn {
   align-self: center;
   margin-top: 20px;

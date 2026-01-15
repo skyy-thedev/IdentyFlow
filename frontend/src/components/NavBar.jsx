@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { 
   FiHome, 
+  FiUserPlus,
   FiUser, 
   FiBook, 
   FiBarChart2, 
@@ -25,10 +26,11 @@ export default function Sidebar({ onSelect }) {
     setLocation("/");
   };
 
-  // MENU PADRÃO
+  // MENU PADRÃO'
   const menuItems = [
     { icon: <FiHome size={30} />, label: "Dashboard", action: () => onSelect("dashboard") },
-    { icon: <FiUser size={30} />, label: "Cadastro", action: () => onSelect("cadastro") },
+    { icon: <FiUserPlus size={30} />, label: "Cadastro", action: () => onSelect("cadastro") },
+    { icon: <FiUser size={30} />, label: "Turmas", action: () => onSelect("turmas") },
     { icon: <FiBook size={30} />, label: "Histórico", action: () => onSelect("historico") },
     { icon: <FiBarChart2 size={30} />, label: "Analytics", action: () => onSelect("analytics") },
   ];

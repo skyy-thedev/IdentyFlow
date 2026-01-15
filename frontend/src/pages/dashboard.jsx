@@ -7,6 +7,7 @@ import Historico from "../components/Historico";
 import Analytics from "../components/Analytics";
 import ListaUsuarios from "../components/ListaUsuarios";
 import CursosLista from "../components/CursosLista";
+import Turmas from "../components/Turmas.jsx";
 import '../styles/dashboard.css';
 
 function Dashboard({ showToast }) {
@@ -18,6 +19,8 @@ function Dashboard({ showToast }) {
         return <DashboardHome showToast={showToast} />;
       case "cadastro":
         return <CadastroAlunos showToast={showToast} />;
+      case "turmas":
+        return <Turmas showToast={showToast} />;
       case "historico":
         return <Historico showToast={showToast} />;
       case "analytics":
