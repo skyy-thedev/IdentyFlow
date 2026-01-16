@@ -1,14 +1,14 @@
 .page {
   color: #000;
   display: flex;
-  margin-left: 13vh;
+  margin-left: 12vh;
   justify-content: center;
   align-items: flex-start;
   padding: 20px;
   flex-wrap: wrap;
   width: 100vw;
-  height: 88vh;
-  transform: scale(0.9);
+  height: 85vh;
+  transform: scale(0.85);
 }
 
 .card {
@@ -63,6 +63,7 @@ select:focus {
 .form {
   display: flex;
   flex-direction: column;
+  margin-top: -20px;
   gap: 20px;
   box-shadow: none;
   color: #000;
@@ -84,34 +85,49 @@ select:focus {
 
 .checkbox-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(13vw, 1fr));
+  gap: 2vh 0vh;
+  margin: 0;
+}
+
+.form-group p {
+  margin: 0 auto;
+  font-size: 1.4rem;
+  padding: 0 0 2vh 0;
+}
+
+.checkbox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 13vw;
+  height: 70%;
+  background-color: #20354b;
+  border-radius: 15px;
+  transition: all 0.2s ease-in-out;
+  font-weight: normal;
+  color: white;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.checkbox:has(input:checked) {
+  background-color: #4a90e2;
+  transform: scale(1.0);
+}
+
+.checkbox p {
+  text-align: center;
+  margin-top: -1vh;
+  font-size: 1rem;
+  width: 13vw;
 }
 
 .checkbox-round {
-  -webkit-appearance: none;
-  appearance: none;
-  background-color:#ffffff;
-  border: 2px solid #050505;
-  border-radius: 50%;
-  cursor: pointer;
-  width: 0.5vw;
-  height: 0.5vh;
-  position: relative;
-  transition: all 0.2s ease-in-out;
-  vertical-align: middle;
-  margin-right: 6px;
-  box-shadow: none;
+  visibility: hidden;
+  background-color: #20354b00;
 }
-
-/* Quando estiver selecionado */
-.checkbox-round:checked {
-  background-color: #1F2A48; /* cor azul padrão, pode mudar */
-  border-color: #20354b;
-}
-
-/* Pontinho interno */
-
 
 .cadastro-btn {
   align-self: center;

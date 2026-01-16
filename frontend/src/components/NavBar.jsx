@@ -18,6 +18,12 @@ export default function Sidebar({ onSelect }) {
   const [isOpen, setIsOpen] = useState(false);
   const [, setLocation] = useLocation();
   const { logout, user } = useAuth();
+  const [activeItem, setActiveItem] = useState("Dashboard");
+
+  function handleItemClick(item) {
+    setActiveItem(item.label);
+    item.action(); // mantém a navegação/ação original
+  }
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -78,7 +84,11 @@ export default function Sidebar({ onSelect }) {
       {/* MENU */}
       <nav className="sidebar-menu">
         {menuItems.map((item, index) => (
-          <div key={index} className="menu-item" onClick={item.action}>
+          <div
+            key={index}
+            className={`menu-item ${item.label === activeItem ? "active" : ""}`}
+            onClick={() => handleItemClick(item)}
+          >
             {item.icon}
             {isOpen && <span className="item-text">{item.label}</span>}
           </div>

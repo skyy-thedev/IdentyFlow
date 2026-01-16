@@ -71,8 +71,6 @@ export default function LoginForm() {
     }
   };
 
-  const handleDashboard = () => {setLocation("/dashboard");}
-
   return (
     <>
       {modal && (
@@ -85,9 +83,6 @@ export default function LoginForm() {
       )}
 
       <div className="login">
-        <div className="dash-container">
-          <button onClick={handleDashboard}>Go to Dashboard → </button>
-        </div>
 
         <h1>Acesse sua conta</h1>
 

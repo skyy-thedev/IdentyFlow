@@ -1,9 +1,9 @@
 .lista-container {
-  padding: 25px 30px;
   color: white;
-  width: 100%;
+  width: 36vw;
   animation: fadeIn 0.4s ease-in-out;
   font-family: 'Inter';
+  margin: 0 0 0 5vw;
 }
 
 .lista-container h2 {

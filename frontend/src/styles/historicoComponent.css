@@ -1,20 +1,17 @@
-.historicoContainer {
-    width: 60vw;
-    height: 30vw;
-    border: 1px solid white;
-    border-radius: 15px;
-    align-items: center;
-    margin: 0 auto;
-    align-content: center;
-    box-shadow: 1px 1px 2px white;
-    transition: all 0.2s ease;
+.historico-container {
+    background-color: white;
+    border-radius: 9px;
+    padding: 3vh;
+    margin: 5vh 0;
 }
 
-.historicoContainer:hover {
-    box-shadow: 1px 1px 15px white;
+.table-container{
+    width: 100%;
 }
 
-.historicoContainer h1 {
-    align-self: center;
-    justify-self: center;
+.alunos-table th, .alunos-table td {
+    width: 10vw;
+    height: 5vh;
+    padding: 0 2vh 2vh 2vh;
+    border-right: 1px solid #4a91e268;
 }

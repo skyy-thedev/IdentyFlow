@@ -118,7 +118,7 @@ export default function CadastroAlunos({ showToast }) {
 
     try {
       await api.post("/alunos", formData);
-      alert("Aluno cadastrado com sucesso!");
+      showToast("Aluno cadastrado com sucesso!");
 
       const hoje = new Date();
       const dataFormatada = hoje.toISOString().split("T")[0];
@@ -275,7 +275,7 @@ export default function CadastroAlunos({ showToast }) {
 
           {/* 4ª linha - Cursos */}
           <div className="form-group">
-            <label>Curso(s) Escolhido(s)</label>
+            <p>Curso(s) Escolhido(s):</p>
           <div className="checkbox-grid">
             {loading ? (
               <p>Carregando cursos...</p>
@@ -292,7 +292,7 @@ export default function CadastroAlunos({ showToast }) {
                       checked={formData.cursos.includes(nomeCurso)}
                       onChange={() => handleCheckboxChange(nomeCurso)}
                     />
-                    {nomeCurso}
+                    <p>{nomeCurso}</p>
                   </label>
                 );
               })
