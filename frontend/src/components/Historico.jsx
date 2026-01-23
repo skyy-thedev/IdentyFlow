@@ -6,6 +6,14 @@ export default function Historico({ showToast }) {
   const [alunos, setAlunos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
+  const [filtroNome, setFiltroNome] = useState("");
+  const [filtroData, setFiltroData] = useState("");
+  const [filtroCurso, setFiltroCurso] = useState("");
+
+  const cursosDisponiveis = [...new Set(
+  alunos.flatMap(a => Array.isArray(a.cursos) ? a.cursos : [a.cursos])
+  )];
+
 
   // Busca os alunos cadastrados no servidor
   useEffect(() => {
@@ -30,10 +38,52 @@ export default function Historico({ showToast }) {
     fetchAlunos();
   }, [showToast]);
 
+  const alunosFiltrados = alunos.filter((aluno) => {
+  const nomeMatch = aluno.nome
+    .toLowerCase()
+    .includes(filtroNome.toLowerCase());
+
+  const dataMatch = filtroData
+    ? new Date(aluno.dataCadastro).toISOString().split("T")[0] === filtroData
+    : true;
+
+  const cursoMatch = filtroCurso
+    ? (Array.isArray(aluno.cursos)
+        ? aluno.cursos.includes(filtroCurso)
+        : aluno.cursos === filtroCurso)
+    : true;
+
+  return nomeMatch && dataMatch && cursoMatch;
+  });
+
   return (
     <div className="page">
       <div className="historico-container">
         <h1>HISTÓRICO DE CADASTROS</h1>
+
+        <div className="filtro-container">
+  <input
+    type="text"
+    placeholder="Pesquisar nome..."
+    value={filtroNome}
+    onChange={(e) => setFiltroNome(e.target.value)}
+  />
+
+ <input
+  type="date"
+  value={filtroData}
+  onChange={(e) => setFiltroData(e.target.value)}
+  onClick={(e) => e.target.showPicker && e.target.showPicker()}
+/>
+
+  <select value={filtroCurso} onChange={(e) => setFiltroCurso(e.target.value)}>
+    <option value="">Todos os cursos</option>
+    {cursosDisponiveis.map((c) => (
+      <option key={c} value={c}>{c}</option>
+    ))}
+  </select>
+  </div>
+
 
         {loading ? (
           <p>Carregando dados...</p>
@@ -55,7 +105,7 @@ export default function Historico({ showToast }) {
                 </tr>
               </thead>
               <tbody>
-                {alunos.map((aluno) => (
+                {alunosFiltrados.map((aluno) => (
                   <tr key={aluno.id || aluno._id}>
                     <td>{aluno.nome}</td>
                     <td>{aluno.telefone}</td>
