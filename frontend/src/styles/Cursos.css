@@ -1,29 +1,92 @@
+/* ===== FILTRO ===== */
+.filtro-curso-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.input-filtro-curso {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #bfc4d1;
+  min-width: 180px;
+  max-width: 220px;
+  width: 100%;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.15);
+  color: #222;
+}
+
+@media (max-width: 600px) {
+  .filtro-curso-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .input-filtro-curso {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .btn-add-curso {
+    width: 100%;
+  }
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
 .cursos-container {
-  margin: 10vh 0 0 5vw;
+  margin: 10vh auto 0 auto;
   padding: 25px;
   color: white;
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.cursos-table {
+/* ===== WRAPPER DA TABELA ===== */
+.table-wrapper {
   width: 100%;
+  min-height: 300px; /* sustenta base quando vazio */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+  margin-top: 12px;
+}
+
+/* ===== TABELA ===== */
+.cursos-table {  
+  margin-top: 0;
+  width: 100%;
+  max-width: 900px;
   border-collapse: collapse;
-  margin-top: -7vh;
   background: rgba(255,255,255,0.05);
   border-radius: 10px;
-  transform: scale(0.8);
+  table-layout: auto;
+  transition: all 0.2s;
+  overflow: visible;
 }
 
-.cursos-table th,
-.cursos-table td {
-  padding: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
+.cursos-table td,
 .cursos-table th {
-  background: rgba(255,255,255,0.1);
-  text-align: left;  
+  word-break: break-word;
+  white-space: normal;
+  padding: 14px 18px ;
+}
+.cursos-table tbody tr td {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  display: table-row-group;
 }
 
+/* ===== BOTÕES ===== */
 .btn-add-curso {
   background-color: #4a90e2;
   padding: 12px 22px;
@@ -40,44 +103,67 @@
   transform: scale(1.03);
 }
 
-.addcurso-container {
-  padding: 10px;
-  color: #fff;
+/* Ações da tabela */
+.cursos-table td:last-child {
+  min-width: 180px ;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-input, select {
-  width: 90%;
-  padding: 12px;
-  background: rgba(0,0,0,0.35);
-  border: 1px solid rgba(255,255,255,0.15);
+/* Editar */
+.btn-edit {
+  min-width: 90px;
+  padding: 8px 14px;
   border-radius: 8px;
-  color: white;
-}
-
-.btn-save-curso {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #5b2be8, #7a4fff);
   border: none;
-  border-radius: 8px;
-  color: white;
   font-weight: 600;
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
 }
+
+.btn-edit:hover {
+  background-color: #3b7dd8;
+  transform: scale(1.05);
+}
+
+/* Excluir */
 .btn-delete {
-  width: 5vw;
-  margin-left: 2vh;
-  padding: 1vh;
-  background-color: #E45454;
-  border: none;
+  min-width: 90px;
+  padding: 8px 14px;
   border-radius: 8px;
-  color: white;
+  border: none;
   font-weight: 600;
+  background-color: #E45454;
+  color: white;
+  cursor: pointer;
 }
+
 .btn-delete:hover {
   background-color: #ff3b3b;
   transform: scale(1.05);
+}
+/* 🔒 Garante estrutura real de tabela */
+.cursos-table {
+  display: table;
+}
+
+.cursos-table thead {
+  display: table-header-group;
+}
+
+.cursos-table tbody {
+  display: table-row-group;
+}
+
+.cursos-table tr {
+  display: table-row;
+}
+
+.cursos-table th,
+.cursos-table td {
+  display: table-cell;
+  vertical-align: middle;
 }

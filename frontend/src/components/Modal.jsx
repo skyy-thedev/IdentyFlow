@@ -1,6 +1,6 @@
 import "../styles/Modal.css";
 
-export default function Modal({ type = "error", title, message, onClose }) {
+export default function Modal({ type = "error", title, message, onClose, children }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div 
@@ -10,11 +10,15 @@ export default function Modal({ type = "error", title, message, onClose }) {
         <button className="modal-close" onClick={onClose}>×</button>
 
         <h2>{title}</h2>
-        <p>{message}</p>
+        {message && <p>{message}</p>}
 
-        <button onClick={onClose} className="btn-save-user">
-          Fechar
-        </button>
+        {children ? (
+          <div style={{ marginTop: 16 }}>{children}</div>
+        ) : (
+          <button onClick={onClose} className="btn-save-user">
+            Fechar
+          </button>
+        )}
       </div>
     </div>
   );

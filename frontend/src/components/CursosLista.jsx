@@ -13,6 +13,9 @@ export default function CursosLista({ showToast }) {
   const [erro, setErro] = useState(null);
   const [showAddCurso, setShowAddCurso] = useState(false);
   const [cursoParaExcluir, setCursoParaExcluir] = useState(null); // Guarda o curso a ser excluído
+  const [cursoParaEditar, setCursoParaEditar] = useState(null); // Guarda o curso a ser editado
+  const [editForm, setEditForm] = useState({});
+  const [filtroNome, setFiltroNome] = useState("");
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -59,42 +62,59 @@ export default function CursosLista({ showToast }) {
     }
   };
 
+  // Cursos filtrados pelo nome
+  const cursosFiltrados = cursos.filter((curso) =>
+    curso.nome.toLowerCase().includes(filtroNome.toLowerCase())
+  );
+
   return (
     <div className="cursos-container">
       <h2>Cursos Cadastrados</h2>
-      <p>Total: <strong>{cursos.length}</strong></p>
+      <p>Total: <strong>{cursosFiltrados.length}</strong></p>
 
-      <button className="btn-add-curso" onClick={() => setShowAddCurso(true)}>
-        + Adicionar Novo Curso
-      </button>
+      <div className="filtro-curso-container">
+        <button className="btn-add-curso" onClick={() => setShowAddCurso(true)}>
+          + Adicionar Novo Curso
+        </button>
+        <input
+          className="input-filtro-curso"
+          type="text"
+          placeholder="Pesquisar curso..."
+          value={filtroNome}
+          onChange={e => setFiltroNome(e.target.value)}
+        />
+      </div>
 
       {showAddCurso && (
-        <div className="modal-overlay" onClick={() => setShowAddCurso(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowAddCurso(false)}>×</button>
-
-            <AddCurso
-              onCursoAdded={async () => {
-                const token = localStorage.getItem("token");
-                try {
-                  const res = await api.get("/cursos", {
-                    headers: { Authorization: `Bearer ${token}` }
-                  });
-                  setCursos(res.data.cursos);
-                  setShowAddCurso(false);
-                  showToast("Curso criado com sucesso!", "success");
-                } catch (err) {
-                  console.error(err);
-                  showToast("Erro ao carregar cursos.", "error");
-                }
-              }}
-              onClose={() => setShowAddCurso(false)}
-            />
-          </div>
-        </div>
+        <Modal
+          type="info"
+          title="Adicionar Novo Curso"
+          message={null}
+          onClose={() => setShowAddCurso(false)}
+        >
+          <AddCurso
+            onCursoAdded={async () => {
+              const token = localStorage.getItem("token");
+              try {
+                const res = await api.get("/cursos", {
+                  headers: { Authorization: `Bearer ${token}` }
+                });
+                setCursos(res.data.cursos);
+                setShowAddCurso(false);
+                showToast("Curso criado com sucesso!", "success");
+              } catch (err) {
+                console.error(err);
+                showToast("Erro ao carregar cursos.", "error");
+              }
+            }}
+            onClose={() => setShowAddCurso(false)}
+          />
+        </Modal>
       )}
 
-      <table className="cursos-table">
+      <div className="table-wrapper">
+        <table className="cursos-table">
+
         <thead>
           <tr>
             <th>Curso</th>
@@ -108,16 +128,39 @@ export default function CursosLista({ showToast }) {
         </thead>
 
         <tbody>
-          {cursos.map((c) => (
+            {cursosFiltrados.length === 0 ? (
+             <tr>
+            <td colSpan={7} style={{ textAlign: "center", padding: "40px 0" }}>
+            Nenhum curso encontrado
+            </td>
+          </tr>
+         ) : (
+         cursosFiltrados.map((c) => (
+
             <tr key={c._id}>
               <td>{c.nome}</td>
               <td>{c.cargaHoraria}h</td>
               <td>{c.dias}</td>
-              <td>{c.valorTotal.toFixed(2)}</td>
+              <td>{Number(c.valorTotal).toFixed(2)}</td>
               <td>{c.minVagas}</td>
               <td>{c.maxVagas}</td>
               <td>
-                <button className="btn-edit">Editar</button>
+                <button
+                  className="btn-edit"
+                  onClick={() => {
+                    setCursoParaEditar(c);
+                    setEditForm({
+                      nome: c.nome,
+                      cargaHoraria: c.cargaHoraria,
+                      dias: c.dias,
+                      valorTotal: c.valorTotal,
+                      minVagas: c.minVagas,
+                      maxVagas: c.maxVagas,
+                    });
+                  }}
+                >
+                  Editar
+                </button>
                 <button
                   className="btn-delete"
                   onClick={() => setCursoParaExcluir(c)}
@@ -126,9 +169,12 @@ export default function CursosLista({ showToast }) {
                 </button>
               </td>
             </tr>
-          ))}
+          ))
+        )}
         </tbody>
-      </table>
+        </table>
+      </div>
+
       {/* Modal de confirmação de exclusão */}
       {cursoParaExcluir && (
         <Modal
@@ -150,6 +196,109 @@ export default function CursosLista({ showToast }) {
           >
             Cancelar
           </button>
+        </Modal>
+      )}
+
+      {/* Modal de edição de curso */}
+      {cursoParaEditar && (
+        <Modal
+          type="info"
+          title="Editar Curso"
+          message={null}
+          onClose={() => setCursoParaEditar(null)}
+        >
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const token = localStorage.getItem("token");
+              try {
+                await api.put(`/cursos/${cursoParaEditar._id}`, {
+                  nome: editForm.nome,
+                  cargaHoraria: Number(editForm.cargaHoraria),
+                  dias: Number(editForm.dias),
+                  valorTotal: Number(editForm.valorTotal),
+                  minVagas: Number(editForm.minVagas),
+                  maxVagas: Number(editForm.maxVagas),
+                }, {
+                  headers: { Authorization: `Bearer ${token}` }
+                });
+                setCursos((prev) => prev.map((c) =>
+                  c._id === cursoParaEditar._id
+                    ? { ...c, ...editForm }
+                    : c
+                ));
+                showToast("Curso atualizado com sucesso!", "success");
+                setCursoParaEditar(null);
+              } catch (err) {
+                showToast(
+                  err.response?.data?.msg || "Erro ao atualizar curso.",
+                  "error"
+                );
+              }
+            }}
+            style={{ display: "flex", flexDirection: "column", gap: 10 }}
+          >
+            <label>
+              Nome:
+              <input
+                type="text"
+                value={editForm.nome || ""}
+                onChange={e => setEditForm(f => ({ ...f, nome: e.target.value }))}
+                required
+              />
+            </label>
+            <label>
+              Carga Horária:
+              <input
+                type="number"
+                value={editForm.cargaHoraria || ""}
+                onChange={e => setEditForm(f => ({ ...f, cargaHoraria: e.target.value }))}
+                required
+              />
+            </label>
+            <label>
+              Dias:
+              <input
+                type="number"
+                value={editForm.dias || ""}
+                onChange={e => setEditForm(f => ({ ...f, dias: e.target.value }))}
+                required
+              />
+            </label>
+            <label>
+              Valor Total:
+              <input
+                type="number"
+                value={editForm.valorTotal || ""}
+                onChange={e => setEditForm(f => ({ ...f, valorTotal: e.target.value }))}
+                required
+              />
+            </label>
+            <label>
+              Mínimo de Vagas:
+              <input
+                type="number"
+                value={editForm.minVagas || ""}
+                onChange={e => setEditForm(f => ({ ...f, minVagas: e.target.value }))}
+                required
+              />
+            </label>
+            <label>
+              Máximo de Vagas:
+              <input
+                type="number"
+                value={editForm.maxVagas || ""}
+                onChange={e => setEditForm(f => ({ ...f, maxVagas: e.target.value }))}
+                required
+              />
+            </label>
+            <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+              <button type="submit" className="btn-save-curso">Salvar</button>
+              <button type="button" className="btn-edit" onClick={() => setCursoParaEditar(null)}>
+                Cancelar
+              </button>
+            </div>
+          </form>
         </Modal>
       )}
     </div>
