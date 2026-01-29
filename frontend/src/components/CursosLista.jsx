@@ -1,6 +1,8 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AddCurso from "./AddCurso";
+import api from "../services/api";
 import "../styles/Cursos.css";
 
 export default function CursosLista({ showToast }) {
@@ -34,6 +36,24 @@ export default function CursosLista({ showToast }) {
   if (loading) return <p className="loading">Carregando cursos...</p>;
   if (erro) return <p className="erro">{erro}</p>;
 
+  // Função para excluir (soft delete) um curso
+  const handleDelete = async (id) => {
+    if (!window.confirm("Tem certeza que deseja excluir este curso?")) return;
+    const token = localStorage.getItem("token");
+    try {
+      await api.delete(`/cursos/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCursos((prev) => prev.filter((c) => c._id !== id));
+      showToast("Curso excluído com sucesso!", "success");
+    } catch (err) {
+      showToast(
+        err.response?.data?.msg || "Erro ao excluir curso.",
+        "error"
+      );
+    }
+  };
+
   return (
     <div className="cursos-container">
       <h2>Cursos Cadastrados</h2>
@@ -52,7 +72,7 @@ export default function CursosLista({ showToast }) {
               onCursoAdded={async () => {
                 const token = localStorage.getItem("token");
                 try {
-                  const res = await axios.get("http://localhost:5000/cursos", {
+                  const res = await api.get("/cursos", {
                     headers: { Authorization: `Bearer ${token}` }
                   });
                   setCursos(res.data.cursos);
@@ -95,7 +115,7 @@ export default function CursosLista({ showToast }) {
                 <button className="btn-edit">Editar</button>
                 <button
                   className="btn-delete"
-                  onClick={() => showToast("Função ainda não implementada", "warning")}
+                  onClick={() => handleDelete(c._id)}
                 >
                   Excluir
                 </button>

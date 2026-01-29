@@ -1,16 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Curso = require("../models/Cursos");
+const cursoController = require("../controllers/cursoController");
 const auth = require("../middlewares/authMiddleware");
 
-router.get("/", auth([ "admin", "god"]), async (req, res) =>{
-  try {
-    const cursos = await Curso.find().sort({ criadoEm: -1 });
-    res.json({ cursos });
-  } catch (err) {
-    res.status(500).json({ msg: "Erro ao carregar cursos" });
-  }
-});
+// Lista apenas cursos ativos
+router.get("/", auth([ "admin", "god"]), cursoController.getCursosAtivos);
 
 router.post("/", auth(["admin", "god"]), async (req, res) => {
   try {
@@ -31,13 +26,10 @@ router.put("/:id", auth(["admin", "god"]), async (req, res) => {
   }
 });
 
-router.delete("/:id", auth(["admin", "god"]), async (req, res) => {
-  try {
-    await Curso.findByIdAndDelete(req.params.id);
-    res.json({ msg: "Curso removido!" });
-  } catch {
-    res.status(400).json({ msg: "Erro ao remover curso" });
-  }
-});
+// Soft delete de curso
+router.delete("/:id", auth(["admin", "god"]), cursoController.softDeleteCurso);
+
+// (Opcional) Rota para reativar curso
+// router.patch("/:id/reativar", auth(["admin", "god"]), cursoController.reativarCurso);
 
 module.exports = router;

@@ -77,3 +77,7 @@ input, select {
   color: white;
   font-weight: 600;
 }
+.btn-delete:hover {
+  background-color: #ff3b3b;
+  transform: scale(1.05);
+}
