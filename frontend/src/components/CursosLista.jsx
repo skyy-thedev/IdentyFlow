@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AddCurso from "./AddCurso";
 import api from "../services/api";
+import Modal from "./Modal";
 import "../styles/Cursos.css";
+
 
 export default function CursosLista({ showToast }) {
   const [cursos, setCursos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
   const [showAddCurso, setShowAddCurso] = useState(false);
+  const [cursoParaExcluir, setCursoParaExcluir] = useState(null); // Guarda o curso a ser excluído
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -36,21 +39,23 @@ export default function CursosLista({ showToast }) {
   if (loading) return <p className="loading">Carregando cursos...</p>;
   if (erro) return <p className="erro">{erro}</p>;
 
-  // Função para excluir (soft delete) um curso
-  const handleDelete = async (id) => {
-    if (!window.confirm("Tem certeza que deseja excluir este curso?")) return;
+  // Função para confirmar exclusão
+  const confirmarExclusao = async () => {
+    if (!cursoParaExcluir) return;
     const token = localStorage.getItem("token");
     try {
-      await api.delete(`/cursos/${id}`, {
+      await api.delete(`/cursos/${cursoParaExcluir._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setCursos((prev) => prev.filter((c) => c._id !== id));
+      setCursos((prev) => prev.filter((c) => c._id !== cursoParaExcluir._id));
       showToast("Curso excluído com sucesso!", "success");
     } catch (err) {
       showToast(
         err.response?.data?.msg || "Erro ao excluir curso.",
         "error"
       );
+    } finally {
+      setCursoParaExcluir(null);
     }
   };
 
@@ -115,7 +120,7 @@ export default function CursosLista({ showToast }) {
                 <button className="btn-edit">Editar</button>
                 <button
                   className="btn-delete"
-                  onClick={() => handleDelete(c._id)}
+                  onClick={() => setCursoParaExcluir(c)}
                 >
                   Excluir
                 </button>
@@ -124,6 +129,29 @@ export default function CursosLista({ showToast }) {
           ))}
         </tbody>
       </table>
+      {/* Modal de confirmação de exclusão */}
+      {cursoParaExcluir && (
+        <Modal
+          type="warning"
+          title="Confirmar exclusão"
+          message={`Tem certeza que deseja excluir o curso "${cursoParaExcluir.nome}"? Essa ação pode ser desfeita reativando o curso futuramente.`}
+          onClose={() => setCursoParaExcluir(null)}
+        >
+          <button
+            className="btn-delete"
+            onClick={confirmarExclusao}
+            style={{ marginRight: 12 }}
+          >
+            Excluir
+          </button>
+          <button
+            className="btn-edit"
+            onClick={() => setCursoParaExcluir(null)}
+          >
+            Cancelar
+          </button>
+        </Modal>
+      )}
     </div>
   );
 }
