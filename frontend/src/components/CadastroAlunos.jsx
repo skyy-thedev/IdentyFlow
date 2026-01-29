@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
-import axios from "axios";
 import "../styles/CadastroAlunos.css";
 
 
@@ -146,13 +145,8 @@ export default function CadastroAlunos({ showToast }) {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        const res = await axios.get("http://localhost:5000/cursos", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        setCursos(res.data.cursos);
+        const res = await api.get("/cursos");
+        setCursos(res.data.cursos || []);
       } catch (err) {
         console.error(err);
         setErro("Não foi possível carregar os cursos.");

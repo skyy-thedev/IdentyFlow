@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 export default function AddCurso({ onCursoAdded }) {
   const [nome, setNome] = useState("");
@@ -15,25 +15,16 @@ export default function AddCurso({ onCursoAdded }) {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token");
-
-      await axios.post(
-        "http://localhost:5000/cursos",
-        {
-          nome,
-          cargaHoraria: Number(cargaHoraria),
-          dias: Number(dias),
-          valorTotal: Number(valor),
-          minVagas: Number(minVagas),
-          maxVagas: Number(maxVagas),
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      await api.post("/cursos", {
+        nome,
+        cargaHoraria: Number(cargaHoraria),
+        dias: Number(dias),
+        valorTotal: Number(valor),
+        minVagas: Number(minVagas),
+        maxVagas: Number(maxVagas),
+      });
 
       onCursoAdded();
-
     } catch (error) {
       console.error(error);
     }

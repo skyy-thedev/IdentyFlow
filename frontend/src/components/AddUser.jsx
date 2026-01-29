@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import "../styles/AddUser.css";
 
 export default function AddUser({ onClose, onUserAdded }) {
@@ -14,12 +14,8 @@ export default function AddUser({ onClose, onUserAdded }) {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/cursos", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setCursos(res.data.cursos);
+        const res = await api.get("/cursos");
+        setCursos(res.data.cursos || []);
       } catch (err) {
         console.error("Erro ao carregar cursos:", err);
       } finally {
@@ -47,21 +43,13 @@ export default function AddUser({ onClose, onUserAdded }) {
     const senhaGerada = gerarSenha();
 
     try {
-      const token = localStorage.getItem("token");
-
-      await axios.post(
-        "http://localhost:5000/auth/register",
-        {
-          nome,
-          email,
-          telefone,
-          profissoes,
-          senha: senhaGerada,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await api.post("/auth/register", {
+        nome,
+        email,
+        telefone,
+        profissoes,
+        senha: senhaGerada,
+      });
 
       alert("Usuário criado com sucesso!");
       onUserAdded();

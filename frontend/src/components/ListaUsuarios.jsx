@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import AddUser from "./AddUser"; // IMPORTANTE: adicionamos isso!
+import api from "../services/api";
+import AddUser from "./AddUser";
 import "../styles/ListaUsuarios.css";
 
 export default function ListaUsuarios() {
@@ -10,18 +10,11 @@ export default function ListaUsuarios() {
 
   const [showAdd, setShowAdd] = useState(false);
 
-  // Função correta para buscar usuários
+  // Função para buscar usuários
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await axios.get("http://localhost:5000/auth/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setUsuarios(response.data.users);
+      const response = await api.get("/auth/users");
+      setUsuarios(response.data.users || []);
     } catch (err) {
       console.error("Erro ao buscar usuários:", err);
       setErro("Não foi possível carregar a lista de usuários.");

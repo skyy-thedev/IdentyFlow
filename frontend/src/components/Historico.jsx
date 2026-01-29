@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import "../styles/historicoComponent.css"; // você pode copiar o estilo base do CadastroAlunos e ajustar
+import api from "../services/api";
+import "../styles/historicoComponent.css";
 
 export default function Historico({ showToast }) {
   const [alunos, setAlunos] = useState([]);
@@ -19,12 +19,7 @@ export default function Historico({ showToast }) {
   useEffect(() => {
     const fetchAlunos = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/alunos", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        // O backend deve retornar um array de alunos
+        const res = await api.get("/alunos");
         setAlunos(res.data.alunos || res.data);
       } catch (error) {
         console.error("Erro ao buscar alunos:", error);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "../contexts/AuthContext";
-import axios from "axios";
+import api from "../services/api";
 import Modal from "./Modal";
 
 export default function LoginForm() {
@@ -35,7 +35,7 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
+      const response = await api.post("/auth/login", {
         email,
         senha
       });

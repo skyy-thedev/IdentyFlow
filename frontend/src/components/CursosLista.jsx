@@ -1,8 +1,7 @@
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import AddCurso from "./AddCurso";
 import api from "../services/api";
+import AddCurso from "./AddCurso";
 import Modal from "./Modal";
 import "../styles/Cursos.css";
 
@@ -20,13 +19,8 @@ export default function CursosLista({ showToast }) {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        const res = await axios.get("http://localhost:5000/cursos", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        setCursos(res.data.cursos);
+        const res = await api.get("/cursos");
+        setCursos(res.data.cursos || []);
       } catch (err) {
         console.error(err);
         setErro("Não foi possível carregar os cursos.");
@@ -45,11 +39,8 @@ export default function CursosLista({ showToast }) {
   // Função para confirmar exclusão
   const confirmarExclusao = async () => {
     if (!cursoParaExcluir) return;
-    const token = localStorage.getItem("token");
     try {
-      await api.delete(`/cursos/${cursoParaExcluir._id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.delete(`/cursos/${cursoParaExcluir._id}`);
       setCursos((prev) => prev.filter((c) => c._id !== cursoParaExcluir._id));
       showToast("Curso excluído com sucesso!", "success");
     } catch (err) {
@@ -94,12 +85,9 @@ export default function CursosLista({ showToast }) {
         >
           <AddCurso
             onCursoAdded={async () => {
-              const token = localStorage.getItem("token");
               try {
-                const res = await api.get("/cursos", {
-                  headers: { Authorization: `Bearer ${token}` }
-                });
-                setCursos(res.data.cursos);
+                const res = await api.get("/cursos");
+                setCursos(res.data.cursos || []);
                 setShowAddCurso(false);
                 showToast("Curso criado com sucesso!", "success");
               } catch (err) {
@@ -210,7 +198,6 @@ export default function CursosLista({ showToast }) {
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const token = localStorage.getItem("token");
               try {
                 await api.put(`/cursos/${cursoParaEditar._id}`, {
                   nome: editForm.nome,
@@ -219,8 +206,6 @@ export default function CursosLista({ showToast }) {
                   valorTotal: Number(editForm.valorTotal),
                   minVagas: Number(editForm.minVagas),
                   maxVagas: Number(editForm.maxVagas),
-                }, {
-                  headers: { Authorization: `Bearer ${token}` }
                 });
                 setCursos((prev) => prev.map((c) =>
                   c._id === cursoParaEditar._id
