@@ -19,7 +19,7 @@ const allowedOrigins = [
 ];
 
 // CORS configurado para aceitar requisições do frontend
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     // Permite requests sem origin (como mobile apps ou curl)
     if (!origin) return callback(null, true);
@@ -35,11 +35,9 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   optionsSuccessStatus: 200
-}));
+};
 
-// Handler explícito para preflight requests
-app.options('*', cors());
-
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Rota de health check
