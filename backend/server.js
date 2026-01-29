@@ -11,7 +11,13 @@ const app = express();
 
 // CORS configurado para aceitar requisições do frontend
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://identyflow.vercel.app', 'https://identyflow-frontend.vercel.app'],
+  origin: [
+    'http://localhost:3000',
+    'https://identyflow.vercel.app',
+    'https://identyflow-frontend.vercel.app',
+    'https://www.identyflow.com.br',
+    'https://identyflow.com.br'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
