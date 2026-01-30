@@ -262,6 +262,124 @@
   border-color: var(--danger);
 }
 
+/* ==================== SEÇÃO DE PLANO ==================== */
+.subscription-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+.subscription-section > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.plan-loading {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.plan-card {
+  background: var(--bg-tertiary, #252a3a);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.plan-card.premium {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05));
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.plan-card.starter {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.plan-info {
+  margin-bottom: 16px;
+}
+
+.plan-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #fff);
+  margin-bottom: 8px;
+}
+
+.icon-premium {
+  color: #fbbf24;
+}
+
+.icon-starter {
+  color: #6366f1;
+}
+
+.plan-price {
+  font-size: 1rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  margin-bottom: 8px;
+}
+
+.plan-status {
+  font-size: 0.875rem;
+  color: var(--text-muted, rgba(255, 255, 255, 0.5));
+  margin-bottom: 4px;
+}
+
+.plan-status span.ativa {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.plan-status span.cancelada {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.plan-status span.pendente {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.plan-expiry {
+  font-size: 0.875rem;
+  color: var(--text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.btn-upgrade {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: none;
+  border-radius: 10px;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-upgrade:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
+}
+
 /* Responsividade */
 @media (max-width: 480px) {
   .user-profile-modal {
@@ -280,5 +398,14 @@
   
   .profile-actions {
     flex-direction: column;
+  }
+  
+  .subscription-section {
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+  
+  .plan-card {
+    padding: 16px;
   }
 }

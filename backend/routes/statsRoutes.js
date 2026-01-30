@@ -386,4 +386,118 @@ router.get("/instrutor/:id", auth(["admin", "god", "instrutor"]), async (req, re
   }
 });
 
+// Métricas avançadas para GOD
+router.get("/god-metrics", auth(["god"]), async (req, res) => {
+  try {
+    const Subscription = require("../models/Subscription");
+    
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    
+    const inicioMes = new Date();
+    inicioMes.setDate(1);
+    inicioMes.setHours(0, 0, 0, 0);
+    
+    const em30Dias = new Date();
+    em30Dias.setDate(em30Dias.getDate() + 30);
+    
+    // Métricas de Usuários
+    const totalUsuarios = await User.countDocuments();
+    const usuariosByRole = await User.aggregate([
+      { $group: { _id: "$role", count: { $sum: 1 } } }
+    ]);
+    
+    // Métricas de Assinaturas
+    const assinaturasStarter = await Subscription.countDocuments({ 
+      plano: "starter", 
+      status: "ativa" 
+    });
+    const assinaturasPremium = await Subscription.countDocuments({ 
+      plano: "premium", 
+      status: "ativa" 
+    });
+    const assinaturasCanceladas = await Subscription.countDocuments({ 
+      status: "cancelada" 
+    });
+    const assinaturasVencendo = await Subscription.countDocuments({
+      status: "ativa",
+      dataFim: { $lte: em30Dias, $gte: hoje }
+    });
+    
+    // Receita
+    const assinaturasAtivas = await Subscription.find({ status: "ativa" });
+    let receitaMensal = 0;
+    assinaturasAtivas.forEach(sub => {
+      if (sub.plano === "starter") receitaMensal += 79.90;
+      if (sub.plano === "premium") receitaMensal += 149.90;
+    });
+    const receitaAnual = receitaMensal * 12;
+    const ticketMedio = assinaturasAtivas.length > 0 
+      ? receitaMensal / assinaturasAtivas.length 
+      : 0;
+    
+    // Distribuição por Role
+    const godCount = usuariosByRole.find(r => r._id === "god")?.count || 0;
+    const adminCount = usuariosByRole.find(r => r._id === "admin")?.count || 0;
+    const instrutorCount = usuariosByRole.find(r => r._id === "instrutor")?.count || 0;
+    
+    // Métricas do Sistema
+    const totalAlunos = await Aluno.countDocuments();
+    const alunosEsteMes = await Aluno.countDocuments({
+      createdAt: { $gte: inicioMes }
+    });
+    
+    const mesPassado = new Date();
+    mesPassado.setMonth(mesPassado.getMonth() - 1);
+    mesPassado.setDate(1);
+    const fimMesPassado = new Date(inicioMes);
+    fimMesPassado.setDate(fimMesPassado.getDate() - 1);
+    
+    const alunosMesPassado = await Aluno.countDocuments({
+      createdAt: { $gte: mesPassado, $lte: fimMesPassado }
+    });
+    
+    const crescimentoPercent = alunosMesPassado > 0 
+      ? ((alunosEsteMes - alunosMesPassado) / alunosMesPassado * 100).toFixed(1)
+      : alunosEsteMes > 0 ? 100 : 0;
+    
+    res.json({
+      usuarios: {
+        total: totalUsuarios,
+        ativosHoje: Math.floor(totalUsuarios * 0.3), // Simulado por enquanto
+        picoSimultaneo: Math.floor(totalUsuarios * 0.15), // Simulado
+        mediaUsoMinutos: 45 // Simulado
+      },
+      assinaturas: {
+        starter: assinaturasStarter,
+        premium: assinaturasPremium,
+        cancelados: assinaturasCanceladas,
+        vencemEm30Dias: assinaturasVencendo
+      },
+      receita: {
+        mensal: receitaMensal,
+        anual: receitaAnual,
+        ticketMedio: ticketMedio
+      },
+      distribuicao: {
+        god: godCount,
+        admin: adminCount,
+        instrutor: instrutorCount,
+        godPercent: totalUsuarios > 0 ? (godCount / totalUsuarios * 100).toFixed(1) : 0,
+        adminPercent: totalUsuarios > 0 ? (adminCount / totalUsuarios * 100).toFixed(1) : 0,
+        instrutorPercent: totalUsuarios > 0 ? (instrutorCount / totalUsuarios * 100).toFixed(1) : 0
+      },
+      sistema: {
+        totalAlunos,
+        alunosEsteMes,
+        crescimentoPercent
+      }
+    });
+    
+  } catch (err) {
+    console.error("Erro ao buscar métricas GOD:", err);
+    res.status(500).json({ msg: "Erro ao buscar métricas", error: err.message });
+  }
+});
+
 module.exports = router;

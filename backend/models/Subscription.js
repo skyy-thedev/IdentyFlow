@@ -129,6 +129,12 @@ const SubscriptionSchema = new mongoose.Schema({
   trialUsado: {
     type: Boolean,
     default: false
+  },
+  
+  // Observações (para marcar planos automáticos, etc)
+  observacoes: {
+    type: String,
+    default: ""
   }
 }, {
   timestamps: true

@@ -17,21 +17,47 @@ exports.getPlanos = async (req, res) => {
 exports.getMinhaAssinatura = async (req, res) => {
   try {
     const userId = req.user.id;
+    const userRole = req.user.role;
     
     let subscription = await Subscription.findOne({ userId })
       .sort({ createdAt: -1 });
     
+    // Se não tem assinatura, criar automaticamente
+    // GOD recebe Premium, outros recebem Starter
     if (!subscription) {
-      return res.json({
-        temAssinatura: false,
-        status: "sem_plano",
-        message: "Nenhuma assinatura encontrada"
+      const planoAutomatico = userRole === "god" ? "premium" : "starter";
+      const dataExpiracao = new Date();
+      dataExpiracao.setFullYear(dataExpiracao.getFullYear() + 100); // "Infinito" para plano automático
+      
+      subscription = new Subscription({
+        userId,
+        plano: planoAutomatico,
+        ciclo: "mensal",
+        status: "ativa",
+        dataInicio: new Date(),
+        dataExpiracao,
+        dataProximaCobranca: dataExpiracao,
+        uso: {
+          alunosAnoReset: new Date()
+        },
+        // Marcar como plano automático/cortesia
+        observacoes: userRole === "god" ? "Plano Premium automático para GOD" : "Plano Starter automático"
       });
+      
+      await subscription.save();
     }
     
-    // Verificar se expirou
+    // Se é GOD e não tem premium, fazer upgrade automático
+    if (userRole === "god" && subscription.plano !== "premium") {
+      subscription.plano = "premium";
+      subscription.status = "ativa";
+      subscription.observacoes = "Plano Premium automático para GOD";
+      await subscription.save();
+    }
+    
+    // Verificar se expirou (exceto para GOD que é sempre ativo)
     const agora = new Date();
-    if (subscription.status === "ativa" && agora > subscription.dataExpiracao) {
+    if (userRole !== "god" && subscription.status === "ativa" && agora > subscription.dataExpiracao) {
       subscription.status = "expirada";
       await subscription.save();
     }
@@ -55,7 +81,7 @@ exports.getMinhaAssinatura = async (req, res) => {
         planoNome: planoConfig?.nome || subscription.plano,
         ciclo: subscription.ciclo,
         status: subscription.status,
-        isAtiva: subscription.isAtiva(),
+        isAtiva: subscription.isAtiva() || userRole === "god",
         dataInicio: subscription.dataInicio,
         dataExpiracao: subscription.dataExpiracao,
         dataProximaCobranca: subscription.dataProximaCobranca,
@@ -65,7 +91,9 @@ exports.getMinhaAssinatura = async (req, res) => {
           alunosAno,
           cursos: cursosAtivos,
           instrutores
-        }
+        },
+        isGod: userRole === "god",
+        isAutomatic: subscription.observacoes?.includes("automático") || false
       }
     });
   } catch (error) {

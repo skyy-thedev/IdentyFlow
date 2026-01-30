@@ -9,7 +9,8 @@ import {
   FiUsers,
   FiBookOpen,
   FiCreditCard,
-  FiX
+  FiX,
+  FiZap
 } from "react-icons/fi";
 import { useLocation } from "wouter";
 import { useAuth } from "../contexts/AuthContext";
@@ -117,6 +118,15 @@ export default function Sidebar({ onSelect }) {
       icon: <FiCreditCard size={24} />,
       label: "Planos",
       action: () => setLocation("/planos"),
+    });
+  }
+
+  // Painel GOD - apenas god
+  if (user?.role === "god") {
+    menuItems.push({
+      icon: <FiZap size={24} />,
+      label: "Painel GOD",
+      action: () => onSelect("godPanel"),
     });
   }
 

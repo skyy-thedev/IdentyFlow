@@ -4,6 +4,7 @@ import NavBar from '../components/NavBar.jsx';
 import DashHeader from '../components/dashHeader.jsx';
 import DashboardHome from "../components/DashboardHome";
 import InstructorDashboard from "../components/InstructorDashboard";
+import GodDashboard from "../components/GodDashboard";
 import CadastroAlunos from "../components/CadastroAlunos";
 import Historico from "../components/Historico";
 import Analytics from "../components/Analytics";
@@ -16,8 +17,9 @@ function Dashboard({ showToast }) {
   const [currentSection, setCurrentSection] = useState("dashboard");
   const { user } = useAuth();
   
-  // Verifica se o usuário é instrutor
+  // Verifica se o usuário é instrutor ou god
   const isInstrutor = user?.role === "instrutor";
+  const isGod = user?.role === "god";
 
   const renderContent = () => {
     switch (currentSection) {
@@ -25,6 +27,12 @@ function Dashboard({ showToast }) {
         // Instrutor vê seu próprio dashboard
         if (isInstrutor) {
           return <InstructorDashboard showToast={showToast} />;
+        }
+        return <DashboardHome showToast={showToast} setActiveSection={setCurrentSection} />;
+      case "godPanel":
+        // Apenas GOD tem acesso ao painel GOD
+        if (isGod) {
+          return <GodDashboard showToast={showToast} />;
         }
         return <DashboardHome showToast={showToast} setActiveSection={setCurrentSection} />;
       case "cadastroAlunos":

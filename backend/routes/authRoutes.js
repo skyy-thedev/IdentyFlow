@@ -67,7 +67,7 @@ router.post("/register", async (req, res) => {
 router.put("/users/:id", authMiddleware([]), async (req, res) => {
   try {
     const { id } = req.params;
-    const { nome, email, telefone, foto } = req.body;
+    const { nome, email, telefone, foto, role } = req.body;
     
     // Verificar se é o próprio usuário ou admin/god
     if (req.user.id !== id && !["god", "admin"].includes(req.user.role)) {
@@ -87,6 +87,11 @@ router.put("/users/:id", authMiddleware([]), async (req, res) => {
     if (email) updateData.email = email;
     if (telefone !== undefined) updateData.telefone = telefone;
     if (foto !== undefined) updateData.foto = foto;
+    
+    // Apenas GOD pode mudar a role (e não para god)
+    if (role && req.user.role === "god" && role !== "god") {
+      updateData.role = role;
+    }
     
     const updatedUser = await User.findByIdAndUpdate(
       id,

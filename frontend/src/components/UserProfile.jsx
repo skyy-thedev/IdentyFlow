@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { 
   FiUser, 
   FiMail, 
@@ -7,25 +7,47 @@ import {
   FiEdit2,
   FiShield,
   FiCheck,
-  FiX
+  FiX,
+  FiStar,
+  FiCreditCard,
+  FiArrowUpRight
 } from "react-icons/fi";
+import { useLocation } from "wouter";
 import { useAuth } from "../contexts/AuthContext";
 import api from "../services/api";
 import "../styles/UserProfile.css";
 
 export default function UserProfile({ showToast, onClose }) {
   const { user, updateUser } = useAuth();
+  const [, setLocation] = useLocation();
   const fileInputRef = useRef(null);
   
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
+  const [assinatura, setAssinatura] = useState(null);
+  const [loadingAssinatura, setLoadingAssinatura] = useState(true);
   const [formData, setFormData] = useState({
     nome: user?.nome || "",
     email: user?.email || "",
     telefone: user?.telefone || "",
     foto: user?.foto || ""
   });
+
+  // Buscar dados da assinatura
+  useEffect(() => {
+    const fetchAssinatura = async () => {
+      try {
+        const res = await api.get("/subscriptions/minha");
+        setAssinatura(res.data);
+      } catch (err) {
+        console.error("Erro ao buscar assinatura:", err);
+      } finally {
+        setLoadingAssinatura(false);
+      }
+    };
+    fetchAssinatura();
+  }, []);
 
   const getRoleBadge = (role) => {
     switch (role) {
@@ -218,6 +240,70 @@ export default function UserProfile({ showToast, onClose }) {
               disabled
             />
             <small>O nível de acesso só pode ser alterado por um administrador</small>
+          </div>
+
+          {/* Seção de Plano/Assinatura */}
+          <div className="subscription-section">
+            <label>
+              <FiCreditCard /> Meu Plano
+            </label>
+            {loadingAssinatura ? (
+              <div className="plan-loading">Carregando...</div>
+            ) : assinatura ? (
+              <div className={`plan-card ${assinatura.plano}`}>
+                <div className="plan-info">
+                  <div className="plan-name">
+                    {assinatura.plano === "premium" ? (
+                      <><FiStar className="icon-premium" /> Premium</>
+                    ) : (
+                      <><FiCheck className="icon-starter" /> Starter</>
+                    )}
+                  </div>
+                  <div className="plan-price">
+                    R$ {assinatura.plano === "premium" ? "149,90" : "79,90"}/mês
+                  </div>
+                  <div className="plan-status">
+                    Status: <span className={assinatura.status}>{assinatura.status}</span>
+                  </div>
+                  {assinatura.dataFim && (
+                    <div className="plan-expiry">
+                      Válido até: {new Date(assinatura.dataFim).toLocaleDateString("pt-BR")}
+                    </div>
+                  )}
+                </div>
+                {assinatura.plano === "starter" && user?.role !== "god" && (
+                  <button 
+                    type="button" 
+                    className="btn-upgrade"
+                    onClick={() => {
+                      onClose();
+                      setLocation("/planos");
+                    }}
+                  >
+                    <FiArrowUpRight /> Fazer Upgrade
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="plan-card starter">
+                <div className="plan-info">
+                  <div className="plan-name">
+                    <FiCheck className="icon-starter" /> Starter
+                  </div>
+                  <div className="plan-price">R$ 79,90/mês</div>
+                </div>
+                <button 
+                  type="button" 
+                  className="btn-upgrade"
+                  onClick={() => {
+                    onClose();
+                    setLocation("/planos");
+                  }}
+                >
+                  <FiArrowUpRight /> Ver Planos
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="profile-actions">
