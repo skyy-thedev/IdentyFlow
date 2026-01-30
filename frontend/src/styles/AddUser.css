@@ -123,3 +123,30 @@
     opacity: 1; 
   }
 }
+
+/* Info e Error Text */
+.info-text {
+  font-size: 0.875rem;
+  color: var(--text-muted, rgba(255, 255, 255, 0.5));
+  margin-bottom: 16px;
+  padding: 12px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-primary, #6366f1);
+}
+
+.error-text {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #ef4444;
+}
+
+.btn-save-user:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}

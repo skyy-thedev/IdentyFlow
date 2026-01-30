@@ -1,63 +1,59 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
 import "../styles/AddUser.css";
 
 export default function AddUser({ onClose, onUserAdded }) {
+  const { user } = useAuth();
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [profissoes, setProfissoes] = useState([]);
-  const [cursos, setCursos] = useState([]);
-  const [loadingCursos, setLoadingCursos] = useState(true);
-
-  // Carrega cursos do banco para o campo PROFISSÃO
-  useEffect(() => {
-    const fetchCursos = async () => {
-      try {
-        const res = await api.get("/cursos");
-        setCursos(res.data.cursos || []);
-      } catch (err) {
-        console.error("Erro ao carregar cursos:", err);
-      } finally {
-        setLoadingCursos(false);
-      }
-    };
-
-    fetchCursos();
-  }, []);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   // Gera senha automática
   const gerarSenha = () => {
-    if (!nome || profissoes.length === 0 || telefone.length < 4) return "";
+    if (!nome || telefone.length < 4) return "";
 
     const nome4 = nome.slice(0, 4).toLowerCase();
-    const prof4 = profissoes[0].slice(0, 4).toLowerCase(); // usa o primeiro curso escolhido
     const tel4 = telefone.slice(-4);
+    const random = Math.random().toString(36).slice(-3);
 
-    return nome4 + prof4 + tel4;
+    return nome4 + tel4 + random;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSubmitting(true);
 
     const senhaGerada = gerarSenha();
+    
+    if (!senhaGerada) {
+      setError("Preencha nome e telefone corretamente");
+      setSubmitting(false);
+      return;
+    }
 
     try {
-      await api.post("/auth/register", {
+      // Admin/GOD usa rota de instrutor, que vincula ao adminPai
+      await api.post("/auth/instrutor", {
         nome,
         email,
         telefone,
-        profissoes,
         senha: senhaGerada,
       });
 
-      alert("Usuário criado com sucesso!");
+      alert("Instrutor criado com sucesso!");
       onUserAdded();
       onClose?.();
 
     } catch (error) {
       console.error(error);
-      alert("Erro ao criar usuário.");
+      const msg = error.response?.data?.msg || "Erro ao criar instrutor.";
+      setError(msg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -67,7 +63,15 @@ export default function AddUser({ onClose, onUserAdded }) {
 
         <button className="modal-close" onClick={onClose}>×</button>
 
-        <h2>Cadastrar Novo Usuário</h2>
+        <h2>Cadastrar Novo Instrutor</h2>
+        
+        {user?.role !== "god" && (
+          <p className="info-text">
+            O instrutor será vinculado à sua conta e terá acesso limitado ao sistema.
+          </p>
+        )}
+        
+        {error && <p className="error-text">{error}</p>}
 
         <form onSubmit={handleSubmit}>
 
@@ -102,37 +106,18 @@ export default function AddUser({ onClose, onUserAdded }) {
           </div>
 
           <div className="form-group">
-            <label>Profissão (Cursos)</label>
-
-            {loadingCursos ? (
-              <p>Carregando cursos...</p>
-            ) : (
-              <select
-                multiple
-                value={profissoes}
-                onChange={(e) =>
-                  setProfissoes(
-                    [...e.target.selectedOptions].map((o) => o.value)
-                  )
-                }
-              >
-                {cursos.map((curso) => (
-                  <option key={curso._id} value={curso.nome}>
-                    {curso.nome}
-                  </option>
-                ))}
-              </select>
-            )}
-
-            <small>Segure CTRL para selecionar mais de um curso.</small>
-          </div>
-
-          <div className="form-group">
             <label>Senha gerada automaticamente</label>
             <input type="text" value={gerarSenha()} disabled />
+            <small>A senha será enviada para o instrutor.</small>
           </div>
 
-          <button type="submit" className="btn-save-user">Salvar Usuário</button>
+          <button 
+            type="submit" 
+            className="btn-save-user"
+            disabled={submitting}
+          >
+            {submitting ? "Criando..." : "Salvar Instrutor"}
+          </button>
         </form>
       </div>
     </div>

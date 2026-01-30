@@ -181,7 +181,21 @@ export default function Planos({ showToast }) {
             <div className="plano-header">
               <h2>{plano.nome}</h2>
               <p className="plano-desc">{plano.descricao}</p>
+              
+              {/* Preço com promoção */}
+              {ciclo === "mensal" && plano.precoOriginal && (
+                <div className="preco-promo">
+                  <span className="preco-original">
+                    de R$ {plano.precoOriginal.toFixed(2).replace(".", ",")}
+                  </span>
+                  <span className="promo-badge">
+                    {plano.mesesPromocao} meses
+                  </span>
+                </div>
+              )}
+              
               <div className="plano-preco">
+                <span className="por-label">por</span>
                 <span className="moeda">R$</span>
                 <span className="valor">
                   {ciclo === "anual" 
@@ -190,6 +204,13 @@ export default function Planos({ showToast }) {
                 </span>
                 <span className="periodo">/mês</span>
               </div>
+              
+              {ciclo === "mensal" && plano.mesesPromocao && (
+                <p className="promo-info">
+                  nos primeiros {plano.mesesPromocao} meses
+                </p>
+              )}
+              
               {ciclo === "anual" && (
                 <p className="preco-anual">
                   R$ {plano.precoAnual.toFixed(2).replace(".", ",")} /ano

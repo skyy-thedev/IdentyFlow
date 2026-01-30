@@ -4,12 +4,14 @@ const mongoose = require("mongoose");
 const PLANOS = {
   starter: {
     nome: "Starter",
-    preco: 79.90,
-    precoAnual: 799.00, // ~2 meses grátis
+    precoOriginal: 99.90,
+    preco: 79.90, // Preço promocional nos primeiros 6 meses
+    precoAnual: 799.00,
+    mesesPromocao: 6,
     limites: {
       alunosAno: 1000,
       cursos: 30,
-      instrutores: 10
+      instrutores: 3 // Até 3 instrutores por admin
     },
     features: {
       turmasAuto: true,
@@ -27,12 +29,14 @@ const PLANOS = {
   },
   premium: {
     nome: "Premium",
-    preco: 149.90,
-    precoAnual: 1499.00, // ~2 meses grátis
+    precoOriginal: 299.90,
+    preco: 199.90, // Preço promocional nos primeiros 12 meses
+    precoAnual: 1999.00,
+    mesesPromocao: 12,
     limites: {
       alunosAno: 5000,
       cursos: 90,
-      instrutores: 30
+      instrutores: 10 // Até 10 instrutores por admin
     },
     features: {
       turmasAuto: true,

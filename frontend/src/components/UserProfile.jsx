@@ -260,14 +260,14 @@ export default function UserProfile({ showToast, onClose }) {
                     )}
                   </div>
                   <div className="plan-price">
-                    R$ {assinatura.plano === "premium" ? "149,90" : "79,90"}/mês
+                    R$ {assinatura.plano === "premium" ? "199,90" : "79,90"}/mês
                   </div>
                   <div className="plan-status">
                     Status: <span className={assinatura.status}>{assinatura.status}</span>
                   </div>
-                  {assinatura.dataFim && (
+                  {assinatura.dataExpiracao && (
                     <div className="plan-expiry">
-                      Válido até: {new Date(assinatura.dataFim).toLocaleDateString("pt-BR")}
+                      Válido até: {new Date(assinatura.dataExpiracao).toLocaleDateString("pt-BR")}
                     </div>
                   )}
                 </div>

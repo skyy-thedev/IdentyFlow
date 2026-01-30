@@ -424,12 +424,12 @@ router.get("/god-metrics", auth(["god"]), async (req, res) => {
       dataFim: { $lte: em30Dias, $gte: hoje }
     });
     
-    // Receita
+    // Receita (preços promocionais atuais)
     const assinaturasAtivas = await Subscription.find({ status: "ativa" });
     let receitaMensal = 0;
     assinaturasAtivas.forEach(sub => {
-      if (sub.plano === "starter") receitaMensal += 79.90;
-      if (sub.plano === "premium") receitaMensal += 149.90;
+      if (sub.plano === "starter") receitaMensal += 79.90;   // Promo: de R$99,90 por R$79,90
+      if (sub.plano === "premium") receitaMensal += 199.90;  // Promo: de R$299,90 por R$199,90
     });
     const receitaAnual = receitaMensal * 12;
     const ticketMedio = assinaturasAtivas.length > 0 

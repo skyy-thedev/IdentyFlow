@@ -8,14 +8,16 @@ const SubscriptionContext = createContext();
 export const PLANOS = {
   starter: {
     nome: "Starter",
-    preco: 79.90,
+    precoOriginal: 99.90,
+    preco: 79.90, // Preço promocional
     precoAnual: 799.00,
+    mesesPromocao: 6,
     descricao: "Ideal para começar",
     cor: "#60a5fa",
     limites: {
       alunosAno: 1000,
       cursos: 30,
-      instrutores: 10
+      instrutores: 3
     },
     features: {
       turmasAuto: true,
@@ -35,7 +37,7 @@ export const PLANOS = {
       "Turmas geradas automaticamente",
       "Até 1.000 alunos/ano",
       "Até 30 cursos",
-      "Até 10 instrutores",
+      "Até 3 instrutores",
       "Estatísticas diárias/mensais",
       "Notificação via e-mail",
       "Suporte em dias úteis"
@@ -52,15 +54,17 @@ export const PLANOS = {
   },
   premium: {
     nome: "Premium",
-    preco: 149.90,
-    precoAnual: 1499.00,
+    precoOriginal: 299.90,
+    preco: 199.90, // Preço promocional
+    precoAnual: 1999.00,
+    mesesPromocao: 12,
     descricao: "Recursos completos",
     cor: "#a78bfa",
     popular: true,
     limites: {
       alunosAno: 5000,
       cursos: 90,
-      instrutores: 30
+      instrutores: 10
     },
     features: {
       turmasAuto: true,
@@ -80,7 +84,7 @@ export const PLANOS = {
       "Turmas manuais + automáticas",
       "Até 5.000 alunos/ano",
       "Até 90 cursos",
-      "Até 30 instrutores",
+      "Até 10 instrutores",
       "Agenda de atendimentos",
       "Notificações WhatsApp",
       "Estatísticas avançadas + anuais",

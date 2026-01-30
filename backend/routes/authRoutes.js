@@ -2,15 +2,31 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require("../models/User");
+const Subscription = require("../models/Subscription");
 const authController = require("../controllers/authController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 
 router.post("/login", authController.login);
+
+// GET /auth/users - Listar usuários
+// GOD vê todos, Admin vê apenas seus instrutores
 router.get("/users", authMiddleware(["god", "admin"]), async (req, res) => {
   try {
-    const users = await User.find({}, "-senha"); 
-    // o "-senha" remove a senha dos resultados por segurança
+    let query = {};
+    
+    // Admin só vê seus próprios instrutores
+    if (req.user.role === "admin") {
+      query = { 
+        $or: [
+          { _id: req.user.id }, // O próprio admin
+          { adminPai: req.user.id } // Seus instrutores
+        ]
+      };
+    }
+    
+    const users = await User.find(query, "-senha")
+      .populate("adminPai", "nome email nomeEmpresa");
 
     res.json({
       total: users.length,
@@ -21,45 +37,111 @@ router.get("/users", authMiddleware(["god", "admin"]), async (req, res) => {
     res.status(500).json({ msg: "Erro ao buscar usuários", error });
   }
 });
-// POST /auth/register
-router.post("/register", async (req, res) => {
-  console.log("REQ BODY:", req.body); // Mostra o corpo recebido
 
-  const { nome, email, senha, profissao } = req.body;
+// POST /auth/register - Registro público (cria admin)
+router.post("/register", async (req, res) => {
+  console.log("REQ BODY:", req.body);
+
+  const { nome, email, senha, nomeEmpresa } = req.body;
 
   try {
-    // Validação básica
     if (!nome || !email || !senha) {
-      console.log("Campos obrigatórios faltando");
       return res.status(400).json({ msg: "Campos obrigatórios faltando" });
     }
 
-    // Verifica se usuário já existe
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log("Usuário já existe:", email);
       return res.status(400).json({ msg: "Usuário já existe" });
     }
 
-    // Hash da senha
     const salt = await bcrypt.genSalt(10);
     const hashedSenha = await bcrypt.hash(senha, salt);
 
-    // Criação do usuário
+    // Registro público sempre cria admin (cliente do sistema)
     const newUser = new User({
       nome,
       email,
       senha: hashedSenha,
-      profissao,
+      role: "admin",
+      nomeEmpresa: nomeEmpresa || ""
     });
 
     const savedUser = await newUser.save();
-    console.log("Usuário criado com sucesso:", savedUser);
+    console.log("Admin criado com sucesso:", savedUser);
 
-    res.status(201).json({ msg: "Usuário criado com sucesso", user: savedUser });
+    res.status(201).json({ msg: "Conta criada com sucesso", user: savedUser });
   } catch (err) {
-    console.error("ERRO AO CRIAR USUÁRIO:", err); // <-- Mostra o erro completo
+    console.error("ERRO AO CRIAR USUÁRIO:", err);
     res.status(500).json({ msg: "Erro no servidor", error: err.message });
+  }
+});
+
+// POST /auth/instrutor - Admin cria instrutor vinculado a ele
+router.post("/instrutor", authMiddleware(["admin", "god"]), async (req, res) => {
+  try {
+    const { nome, email, senha, telefone } = req.body;
+    const adminId = req.user.id;
+    const adminRole = req.user.role;
+    
+    if (!nome || !email || !senha) {
+      return res.status(400).json({ msg: "Campos obrigatórios faltando" });
+    }
+    
+    // Verificar limite de instrutores do plano
+    if (adminRole !== "god") {
+      const subscription = await Subscription.findOne({ 
+        userId: adminId, 
+        status: "ativa" 
+      });
+      
+      if (subscription) {
+        const planoConfig = subscription.getPlanoConfig();
+        const limiteInstrutores = planoConfig?.limites?.instrutores || 3;
+        
+        const instrutoresAtuais = await User.countDocuments({ adminPai: adminId });
+        
+        if (instrutoresAtuais >= limiteInstrutores) {
+          return res.status(403).json({ 
+            msg: `Limite de ${limiteInstrutores} instrutores atingido para o plano ${planoConfig?.nome}`,
+            limite: limiteInstrutores,
+            atual: instrutoresAtuais
+          });
+        }
+      }
+    }
+    
+    // Verificar se email já existe
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ msg: "Email já está em uso" });
+    }
+    
+    const salt = await bcrypt.genSalt(10);
+    const hashedSenha = await bcrypt.hash(senha, salt);
+    
+    const newInstrutor = new User({
+      nome,
+      email,
+      senha: hashedSenha,
+      telefone,
+      role: "instrutor",
+      adminPai: adminRole === "god" ? null : adminId // GOD não tem adminPai
+    });
+    
+    const savedInstrutor = await newInstrutor.save();
+    
+    res.status(201).json({ 
+      msg: "Instrutor criado com sucesso", 
+      user: {
+        id: savedInstrutor._id,
+        nome: savedInstrutor.nome,
+        email: savedInstrutor.email,
+        role: savedInstrutor.role
+      }
+    });
+  } catch (err) {
+    console.error("Erro ao criar instrutor:", err);
+    res.status(500).json({ msg: "Erro ao criar instrutor", error: err.message });
   }
 });
 

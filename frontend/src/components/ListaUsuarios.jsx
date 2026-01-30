@@ -84,12 +84,12 @@ export default function ListaUsuarios() {
   return (
     <div className="lista-container">
       
-      <h2>Lista de Usuários</h2>
+      <h2>{isGod ? "Todos os Usuários" : "Meus Instrutores"}</h2>
       <p>Total: <strong>{usuarios.length}</strong></p>
 
       {/* BOTÃO ADICIONAR */}
       <button className="btn-add" onClick={() => setShowAdd(true)}>
-        + Adicionar Usuário
+        + Adicionar Instrutor
       </button>
 
       {/* FORM ADD USER */}
@@ -111,6 +111,7 @@ export default function ListaUsuarios() {
             <th>Nome</th>
             <th>E-mail</th>
             <th>Função</th>
+            {isGod && <th>Empresa/Admin</th>}
             {isGod && <th>Ações</th>}
           </tr>
         </thead>
@@ -121,6 +122,14 @@ export default function ListaUsuarios() {
               <td data-label="Nome">{u.nome}</td>
               <td data-label="Email">{u.email}</td>
               <td data-label="Função" className={`role ${u.role}`}>{u.role}</td>
+              {isGod && (
+                <td data-label="Empresa">
+                  {u.role === "admin" 
+                    ? (u.nomeEmpresa || "—")
+                    : u.adminPai?.nomeEmpresa || u.adminPai?.nome || "—"
+                  }
+                </td>
+              )}
               {isGod && (
                 <td data-label="Ações">
                   <div className="acoes-cell">
