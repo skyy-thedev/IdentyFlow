@@ -98,16 +98,14 @@
 .login {
   position: relative;
   z-index: 10;
-  background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   width: 100%;
   max-width: 420px;
   padding: 40px;
   animation: fadeInUp 0.6s ease forwards;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
 }
 
 .login h1,
