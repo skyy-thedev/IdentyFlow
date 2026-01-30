@@ -168,7 +168,7 @@ export default function Analytics() {
                         <span className="bar-value">{item.total}</span>
                       </div>
                     </div>
-                    <span className="bar-label">{getMesNome(item._id.mes)}</span>
+                    <span className="bar-label">{getMesNome(item.mes)}</span>
                   </div>
                 ))}
               </div>
@@ -193,12 +193,12 @@ export default function Analytics() {
                 <div key={index} className="popular-item">
                   <div className="popular-rank">#{index + 1}</div>
                   <div className="popular-info">
-                    <span className="popular-name">{curso._id || "Sem curso"}</span>
+                    <span className="popular-name">{curso.nome || "Sem curso"}</span>
                     <div className="popular-bar-container">
                       <div 
                         className="popular-bar"
                         style={{ 
-                          width: `${(curso.total / cursosPopulares[0].total) * 100}%` 
+                          width: `${(curso.total / (cursosPopulares[0]?.total || 1)) * 100}%` 
                         }}
                       ></div>
                     </div>
@@ -223,7 +223,10 @@ export default function Analytics() {
             <h3>Melhor Mês</h3>
             <p>
               {cadastrosPorMes.length > 0 
-                ? `${getMesNome(cadastrosPorMes.reduce((max, m) => m.total > max.total ? m : max, cadastrosPorMes[0])._id.mes)} com ${cadastrosPorMes.reduce((max, m) => m.total > max.total ? m : max, cadastrosPorMes[0]).total} cadastros`
+                ? (() => {
+                    const melhorMes = cadastrosPorMes.reduce((max, m) => (m.total > max.total ? m : max), cadastrosPorMes[0]);
+                    return `${getMesNome(melhorMes.mes)} com ${melhorMes.total} cadastros`;
+                  })()
                 : "Sem dados suficientes"
               }
             </p>
@@ -232,7 +235,7 @@ export default function Analytics() {
             <h3>Curso Líder</h3>
             <p>
               {cursosPopulares.length > 0 
-                ? `${cursosPopulares[0]._id || "N/A"} com ${cursosPopulares[0].total} alunos`
+                ? `${cursosPopulares[0].nome || "N/A"} com ${cursosPopulares[0].total} alunos`
                 : "Sem dados suficientes"
               }
             </p>
