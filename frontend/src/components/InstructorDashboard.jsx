@@ -28,6 +28,7 @@ export default function InstructorDashboard({ showToast }) {
 
   useEffect(() => {
     fetchInstructorStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchInstructorStats = async () => {

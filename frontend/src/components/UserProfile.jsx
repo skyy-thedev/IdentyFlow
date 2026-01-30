@@ -4,7 +4,6 @@ import {
   FiMail, 
   FiPhone, 
   FiCamera, 
-  FiSave, 
   FiEdit2,
   FiShield,
   FiCheck,
