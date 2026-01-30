@@ -20,10 +20,16 @@ exports.softDeleteCurso = async (req, res) => {
   }
 };
 
-// Get only active courses
+// Get only active courses (includes courses without 'ativo' field - legacy data)
 exports.getCursosAtivos = async (req, res) => {
   try {
-    const cursos = await Curso.find({ ativo: true }).sort({ criadoEm: -1 });
+    // Busca cursos ativos OU que não têm o campo 'ativo' definido (dados antigos)
+    const cursos = await Curso.find({ 
+      $or: [
+        { ativo: true },
+        { ativo: { $exists: false } }
+      ]
+    }).sort({ criadoEm: -1 });
     res.json({ cursos });
   } catch (err) {
     res.status(500).json({ msg: 'Erro ao carregar cursos' });
