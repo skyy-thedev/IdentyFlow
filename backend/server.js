@@ -18,7 +18,9 @@ const allowedOrigins = [
   'https://identyflow.vercel.app',
   'https://identyflow-frontend.vercel.app',
   'https://www.identyflow.com.br',
-  'https://identyflow.com.br'
+  'https://identyflow.com.br',
+  'https://app.identyflow.com.br',
+  'https://www.app.identyflow.com.br'
 ];
 
 // CORS configurado para aceitar requisições do frontend
