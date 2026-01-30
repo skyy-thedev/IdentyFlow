@@ -1,0 +1,142 @@
+const Turma = require("../models/Turma");
+const Aluno = require("../models/Aluno");
+
+// Listar todas as turmas
+exports.getTurmas = async (req, res) => {
+  try {
+    const turmas = await Turma.find()
+      .populate("cursoId", "titulo")
+      .sort({ createdAt: -1 });
+
+    // Contar alunos por turma
+    const turmasComCount = await Promise.all(
+      turmas.map(async (turma) => {
+        const alunosCount = await Aluno.countDocuments({ turmaId: turma._id });
+        return {
+          ...turma.toObject(),
+          alunosCount
+        };
+      })
+    );
+
+    res.json(turmasComCount);
+  } catch (error) {
+    console.error("Erro ao buscar turmas:", error);
+    res.status(500).json({ message: "Erro ao buscar turmas", error: error.message });
+  }
+};
+
+// Buscar turma por ID
+exports.getTurmaById = async (req, res) => {
+  try {
+    const turma = await Turma.findById(req.params.id)
+      .populate("cursoId", "titulo");
+
+    if (!turma) {
+      return res.status(404).json({ message: "Turma não encontrada" });
+    }
+
+    const alunosCount = await Aluno.countDocuments({ turmaId: turma._id });
+
+    res.json({
+      ...turma.toObject(),
+      alunosCount
+    });
+  } catch (error) {
+    console.error("Erro ao buscar turma:", error);
+    res.status(500).json({ message: "Erro ao buscar turma", error: error.message });
+  }
+};
+
+// Criar nova turma
+exports.createTurma = async (req, res) => {
+  try {
+    const { nome, cursoId, dataInicio, dataFim, horario, capacidade, status } = req.body;
+
+    const turma = new Turma({
+      nome,
+      cursoId,
+      dataInicio,
+      dataFim,
+      horario,
+      capacidade,
+      status,
+      criadoPor: req.user?.id
+    });
+
+    await turma.save();
+
+    const turmaPopulada = await Turma.findById(turma._id)
+      .populate("cursoId", "titulo");
+
+    res.status(201).json(turmaPopulada);
+  } catch (error) {
+    console.error("Erro ao criar turma:", error);
+    res.status(500).json({ message: "Erro ao criar turma", error: error.message });
+  }
+};
+
+// Atualizar turma
+exports.updateTurma = async (req, res) => {
+  try {
+    const { nome, cursoId, dataInicio, dataFim, horario, capacidade, status } = req.body;
+
+    const turma = await Turma.findByIdAndUpdate(
+      req.params.id,
+      { nome, cursoId, dataInicio, dataFim, horario, capacidade, status },
+      { new: true, runValidators: true }
+    ).populate("cursoId", "titulo");
+
+    if (!turma) {
+      return res.status(404).json({ message: "Turma não encontrada" });
+    }
+
+    res.json(turma);
+  } catch (error) {
+    console.error("Erro ao atualizar turma:", error);
+    res.status(500).json({ message: "Erro ao atualizar turma", error: error.message });
+  }
+};
+
+// Excluir turma
+exports.deleteTurma = async (req, res) => {
+  try {
+    const turma = await Turma.findByIdAndDelete(req.params.id);
+
+    if (!turma) {
+      return res.status(404).json({ message: "Turma não encontrada" });
+    }
+
+    res.json({ message: "Turma excluída com sucesso" });
+  } catch (error) {
+    console.error("Erro ao excluir turma:", error);
+    res.status(500).json({ message: "Erro ao excluir turma", error: error.message });
+  }
+};
+
+// Listar turmas por curso
+exports.getTurmasByCurso = async (req, res) => {
+  try {
+    const turmas = await Turma.find({ cursoId: req.params.cursoId })
+      .populate("cursoId", "titulo")
+      .sort({ createdAt: -1 });
+
+    res.json(turmas);
+  } catch (error) {
+    console.error("Erro ao buscar turmas do curso:", error);
+    res.status(500).json({ message: "Erro ao buscar turmas", error: error.message });
+  }
+};
+
+// Listar alunos da turma
+exports.getAlunosDaTurma = async (req, res) => {
+  try {
+    const alunos = await Aluno.find({ turmaId: req.params.id })
+      .sort({ nome: 1 });
+
+    res.json(alunos);
+  } catch (error) {
+    console.error("Erro ao buscar alunos da turma:", error);
+    res.status(500).json({ message: "Erro ao buscar alunos", error: error.message });
+  }
+};

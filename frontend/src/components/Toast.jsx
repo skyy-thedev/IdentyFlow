@@ -1,14 +1,21 @@
 import { useEffect } from "react";
 import "../styles/Toast.css";
 
-export default function Toast({ message, type, onClose }) {
+export default function Toast({ message, type, onClose, show }) {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 3000); // desaparece após 3s
+    if (onClose && show) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [onClose, show]);
 
-    return () => clearTimeout(timer);
-  }, [onClose]);
+  // Se show for passado explicitamente, respeitar
+  if (show === false) return null;
+  
+  // Se não tem message, não renderiza
+  if (!message) return null;
 
   return (
     <div className={`toast toast-${type}`}>
