@@ -11,6 +11,10 @@ const turmaSchema = new mongoose.Schema({
     ref: "Curso",
     required: [true, "Curso é obrigatório"]
   },
+  instrutorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
   dataInicio: {
     type: Date
   },

@@ -63,4 +63,64 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// PUT /auth/users/:id - Atualizar perfil do usuário
+router.put("/users/:id", authMiddleware([]), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, email, telefone, foto } = req.body;
+    
+    // Verificar se é o próprio usuário ou admin/god
+    if (req.user.id !== id && !["god", "admin"].includes(req.user.role)) {
+      return res.status(403).json({ msg: "Sem permissão para editar este usuário" });
+    }
+    
+    // Verificar se email já existe para outro usuário
+    if (email) {
+      const existingUser = await User.findOne({ email, _id: { $ne: id } });
+      if (existingUser) {
+        return res.status(400).json({ msg: "Email já está em uso" });
+      }
+    }
+    
+    const updateData = {};
+    if (nome) updateData.nome = nome;
+    if (email) updateData.email = email;
+    if (telefone !== undefined) updateData.telefone = telefone;
+    if (foto !== undefined) updateData.foto = foto;
+    
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    ).select("-senha");
+    
+    if (!updatedUser) {
+      return res.status(404).json({ msg: "Usuário não encontrado" });
+    }
+    
+    res.json(updatedUser);
+  } catch (err) {
+    console.error("Erro ao atualizar usuário:", err);
+    res.status(500).json({ msg: "Erro ao atualizar usuário", error: err.message });
+  }
+});
+
+// DELETE /auth/users/:id - Deletar usuário (somente god)
+router.delete("/users/:id", authMiddleware(["god"]), async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const deletedUser = await User.findByIdAndDelete(id);
+    
+    if (!deletedUser) {
+      return res.status(404).json({ msg: "Usuário não encontrado" });
+    }
+    
+    res.json({ msg: "Usuário deletado com sucesso" });
+  } catch (err) {
+    console.error("Erro ao deletar usuário:", err);
+    res.status(500).json({ msg: "Erro ao deletar usuário", error: err.message });
+  }
+});
+
 module.exports = router;

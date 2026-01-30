@@ -66,9 +66,9 @@ export default function ListaUsuarios() {
         <tbody>
           {usuarios.map((u) => (
             <tr key={u._id}>
-              <td>{u.nome}</td>
-              <td>{u.email}</td>
-              <td className={`role ${u.role}`}>{u.role}</td>
+              <td data-label="Nome">{u.nome}</td>
+              <td data-label="Email">{u.email}</td>
+              <td data-label="Função" className={`role ${u.role}`}>{u.role}</td>
             </tr>
           ))}
         </tbody>

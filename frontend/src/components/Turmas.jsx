@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
+import { useRole } from "./RoleGuard";
 import { 
   FiUsers, 
   FiPlus, 
@@ -15,6 +17,9 @@ import Modal from "./Modal";
 import '../styles/turmas.css';
 
 export default function Turmas() {
+  const { user } = useAuth();
+  const { canEdit, canDelete, isInstrutor } = useRole();
+  
   const [turmas, setTurmas] = useState([]);
   const [cursos, setCursos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,8 +46,15 @@ export default function Turmas() {
       ]);
       
       // Garantir que turmas é sempre um array
-      const turmasData = turmasRes.data;
-      setTurmas(Array.isArray(turmasData) ? turmasData : []);
+      let turmasData = turmasRes.data;
+      turmasData = Array.isArray(turmasData) ? turmasData : [];
+      
+      // Se for instrutor, filtrar apenas as turmas dele
+      if (isInstrutor && user?.id) {
+        turmasData = turmasData.filter(t => t.instrutorId === user.id);
+      }
+      
+      setTurmas(turmasData);
       
       // Garantir que cursos é sempre um array
       const cursosData = cursosRes.data;
@@ -71,6 +83,10 @@ export default function Turmas() {
   };
 
   const openCreateModal = () => {
+    if (!canEdit) {
+      showToast("Você não tem permissão para criar turmas", "error");
+      return;
+    }
     setEditingTurma(null);
     setFormData({
       nome: "",
@@ -85,6 +101,10 @@ export default function Turmas() {
   };
 
   const openEditModal = (turma) => {
+    if (!canEdit) {
+      showToast("Você não tem permissão para editar turmas", "error");
+      return;
+    }
     setEditingTurma(turma);
     setFormData({
       nome: turma.nome || "",
@@ -173,13 +193,15 @@ export default function Turmas() {
       <div className="turmas-header">
         <div className="header-left">
           <h1>
-            <FiUsers /> Turmas
+            <FiUsers /> {isInstrutor ? "Minhas Turmas" : "Turmas"}
           </h1>
-          <p>Gerencie as turmas dos cursos</p>
+          <p>{isInstrutor ? "Visualize suas turmas atribuídas" : "Gerencie as turmas dos cursos"}</p>
         </div>
-        <button className="btn-create" onClick={openCreateModal}>
-          <FiPlus /> Nova Turma
-        </button>
+        {canEdit && (
+          <button className="btn-create" onClick={openCreateModal}>
+            <FiPlus /> Nova Turma
+          </button>
+        )}
       </div>
 
       <div className="turmas-controls">
@@ -234,20 +256,24 @@ export default function Turmas() {
               </div>
 
               <div className="turma-actions">
-                <button 
-                  className="btn-action edit"
-                  onClick={() => openEditModal(turma)}
-                  title="Editar"
-                >
-                  <FiEdit2 />
-                </button>
-                <button 
-                  className="btn-action delete"
-                  onClick={() => handleDelete(turma._id)}
-                  title="Excluir"
-                >
-                  <FiTrash2 />
-                </button>
+                {canEdit && (
+                  <button 
+                    className="btn-action edit"
+                    onClick={() => openEditModal(turma)}
+                    title="Editar"
+                  >
+                    <FiEdit2 />
+                  </button>
+                )}
+                {canDelete && (
+                  <button 
+                    className="btn-action delete"
+                    onClick={() => handleDelete(turma._id)}
+                    title="Excluir"
+                  >
+                    <FiTrash2 />
+                  </button>
+                )}
               </div>
             </div>
           ))}

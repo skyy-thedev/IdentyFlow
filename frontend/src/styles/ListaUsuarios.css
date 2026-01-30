@@ -185,3 +185,94 @@
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 768px) {
+  .lista-container {
+    padding: 16px;
+  }
+  
+  .lista-container h2 {
+    font-size: 1.4rem;
+  }
+  
+  .user-table {
+    display: block;
+  }
+  
+  .user-table thead {
+    display: none;
+  }
+  
+  .user-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .user-table tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .user-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .user-table td:last-child {
+    border-bottom: none;
+    padding-top: 16px;
+    justify-content: flex-end;
+  }
+  
+  .user-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+  
+  /* Nome em destaque */
+  .user-table td:first-child {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--accent-primary);
+  }
+  
+  .user-table td:first-child::before {
+    display: none;
+  }
+  
+  .acoes {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .btn-add {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .lista-container {
+    padding: 12px;
+  }
+  
+  .btn-edit,
+  .btn-del {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+}

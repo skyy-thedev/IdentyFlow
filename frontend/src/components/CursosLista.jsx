@@ -126,13 +126,13 @@ export default function CursosLista({ showToast }) {
          cursosFiltrados.map((c) => (
 
             <tr key={c._id}>
-              <td>{c.nome}</td>
-              <td>{c.cargaHoraria}h</td>
-              <td>{c.dias}</td>
-              <td>{Number(c.valorTotal).toFixed(2)}</td>
-              <td>{c.minVagas}</td>
-              <td>{c.maxVagas}</td>
-              <td>
+              <td data-label="Nome">{c.nome}</td>
+              <td data-label="Carga Horária">{c.cargaHoraria}h</td>
+              <td data-label="Dias">{c.dias}</td>
+              <td data-label="Valor">R$ {Number(c.valorTotal).toFixed(2)}</td>
+              <td data-label="Mín. Vagas">{c.minVagas}</td>
+              <td data-label="Máx. Vagas">{c.maxVagas}</td>
+              <td data-label="Ações">
                 <button
                   className="btn-edit"
                   onClick={() => {

@@ -189,3 +189,98 @@
     font-size: 0.85rem;
   }
 }
+
+/* ===== MOBILE: Transformar tabela em cards ===== */
+@media (max-width: 768px) {
+  .historico-page {
+    padding: 16px;
+  }
+  
+  .historico-page h1 {
+    font-size: 1.4rem;
+  }
+  
+  .historico-container {
+    padding: 16px;
+  }
+  
+  .table-container {
+    overflow-x: visible;
+  }
+  
+  .alunos-table {
+    display: block;
+  }
+  
+  .alunos-table thead {
+    display: none;
+  }
+  
+  .alunos-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .alunos-table tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .alunos-table tr:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-primary);
+  }
+  
+  .alunos-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+  }
+  
+  .alunos-table td:last-child {
+    border-bottom: none;
+  }
+  
+  .alunos-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    min-width: 100px;
+  }
+  
+  /* Nome em destaque no mobile */
+  .alunos-table td:first-child {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+    border-bottom: 2px solid var(--accent-primary);
+  }
+  
+  .alunos-table td:first-child::before {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .historico-page {
+    padding: 12px;
+  }
+  
+  .filtro-container input,
+  .filtro-container select {
+    height: 48px;
+    font-size: 0.95rem;
+  }
+}

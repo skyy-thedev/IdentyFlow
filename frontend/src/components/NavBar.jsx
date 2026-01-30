@@ -32,25 +32,58 @@ export default function Sidebar({ onSelect }) {
     setLocation("/");
   };
 
-  // MENU PADRÃO'
-  const menuItems = [
-    { icon: <FiHome size={30} />, label: "Dashboard", action: () => onSelect("dashboard") },
-    { icon: <FiUserPlus size={30} />, label: "Cadastro", action: () => onSelect("cadastro") },
-    { icon: <FiUser size={30} />, label: "Turmas", action: () => onSelect("turmas") },
-    { icon: <FiBook size={30} />, label: "Histórico", action: () => onSelect("historico") },
-    { icon: <FiBarChart2 size={30} />, label: "Analytics", action: () => onSelect("analytics") },
-  ];
+  // MENU baseado no ROLE do usuário
+  const menuItems = [];
+  
+  // Dashboard - todos têm acesso
+  menuItems.push({ 
+    icon: <FiHome size={30} />, 
+    label: "Dashboard", 
+    action: () => onSelect("dashboard") 
+  });
+  
+  // Cadastro - apenas admin e god
+  if (user?.role === "admin" || user?.role === "god") {
+    menuItems.push({ 
+      icon: <FiUserPlus size={30} />, 
+      label: "Cadastro", 
+      action: () => onSelect("cadastro") 
+    });
+  }
+  
+  // Turmas - todos têm acesso (instrutor vê só as dele)
+  menuItems.push({ 
+    icon: <FiUser size={30} />, 
+    label: "Turmas", 
+    action: () => onSelect("turmas") 
+  });
+  
+  // Histórico - todos têm acesso (instrutor vê só os dele)
+  menuItems.push({ 
+    icon: <FiBook size={30} />, 
+    label: "Histórico", 
+    action: () => onSelect("historico") 
+  });
+  
+  // Analytics - apenas admin e god
+  if (user?.role === "admin" || user?.role === "god") {
+    menuItems.push({ 
+      icon: <FiBarChart2 size={30} />, 
+      label: "Analytics", 
+      action: () => onSelect("analytics") 
+    });
+  }
 
-  // 🔥 Aba CURSOS (somente Admin e God)
+  // Cursos - apenas admin e god
   if (user?.role === "admin" || user?.role === "god") {
     menuItems.push({
-      icon: <FiBookOpen    size={30} />,
+      icon: <FiBookOpen size={30} />,
       label: "Cursos",
       action: () => onSelect("cursos"),
     });
   }
 
-  // 🔥 Lista de Usuários (somente Admin e God)
+  // Lista de Usuários - apenas admin e god
   if (user?.role === "admin" || user?.role === "god") {
     menuItems.push({
       icon: <FiUsers size={30} />,

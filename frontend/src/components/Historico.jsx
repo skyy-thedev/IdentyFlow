@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
+import { useRole } from "./RoleGuard";
 import "../styles/historicoComponent.css";
 
 export default function Historico({ showToast }) {
+  const { user } = useAuth();
+  const { isInstrutor } = useRole();
+  
   const [alunos, setAlunos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
@@ -19,7 +24,13 @@ export default function Historico({ showToast }) {
   useEffect(() => {
     const fetchAlunos = async () => {
       try {
-        const res = await api.get("/alunos");
+        let res;
+        if (isInstrutor && user?.id) {
+          // Instrutor vê apenas alunos das suas turmas
+          res = await api.get(`/alunos?instrutorId=${user.id}`);
+        } else {
+          res = await api.get("/alunos");
+        }
         setAlunos(res.data.alunos || res.data);
       } catch (error) {
         console.error("Erro ao buscar alunos:", error);
@@ -31,7 +42,7 @@ export default function Historico({ showToast }) {
     };
 
     fetchAlunos();
-  }, [showToast]);
+  }, [showToast, isInstrutor, user?.id]);
 
   const alunosFiltrados = alunos.filter((aluno) => {
   const nomeMatch = aluno.nome
@@ -53,7 +64,7 @@ export default function Historico({ showToast }) {
 
   return (
     <div className="historico-page">
-      <h1>📋 Histórico de Cadastros</h1>
+      <h1>📋 {isInstrutor ? "Meus Alunos" : "Histórico de Cadastros"}</h1>
       
       <div className="historico-container">
 
@@ -103,20 +114,20 @@ export default function Historico({ showToast }) {
               <tbody>
                 {alunosFiltrados.map((aluno) => (
                   <tr key={aluno.id || aluno._id}>
-                    <td>{aluno.nome}</td>
-                    <td>{aluno.telefone}</td>
-                    <td>{aluno.email}</td>
-                    <td>
+                    <td data-label="Nome">{aluno.nome}</td>
+                    <td data-label="Telefone">{aluno.telefone}</td>
+                    <td data-label="Email">{aluno.email}</td>
+                    <td data-label="Curso(s)">
                       {Array.isArray(aluno.cursos)
                         ? aluno.cursos.join(", ")
                         : aluno.cursos}
                     </td>
-                    <td>
+                    <td data-label="Data">
                       {aluno.dataCadastro
                         ? new Date(aluno.dataCadastro).toLocaleDateString("pt-BR")
                         : "-"}
                     </td>
-                    <td>{aluno.escolaridade}</td>
+                    <td data-label="Escolaridade">{aluno.escolaridade}</td>
                   </tr>
                 ))}
               </tbody>

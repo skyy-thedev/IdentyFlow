@@ -210,3 +210,85 @@
   display: table-cell;
   vertical-align: middle;
 }
+
+/* ===== RESPONSIVO MOBILE ===== */
+@media (max-width: 768px) {
+  .cursos-container {
+    padding: 16px;
+  }
+  
+  .table-wrapper {
+    overflow-x: visible;
+  }
+  
+  .cursos-table {
+    display: block;
+  }
+  
+  .cursos-table thead {
+    display: none;
+  }
+  
+  .cursos-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .cursos-table tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .cursos-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .cursos-table td:last-child {
+    border-bottom: none;
+    padding-top: 16px;
+    justify-content: flex-end;
+    min-width: auto;
+  }
+  
+  .cursos-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+  
+  /* Nome do curso em destaque */
+  .cursos-table td:first-child {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--accent-primary);
+  }
+  
+  .cursos-table td:first-child::before {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .cursos-container {
+    padding: 12px;
+  }
+  
+  .btn-edit,
+  .btn-delete {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+}

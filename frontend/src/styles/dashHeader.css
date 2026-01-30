@@ -75,7 +75,14 @@
 .dash-center .user-role {
   font-size: 0.85rem;
   color: var(--text-muted);
-  margin-top: 2px;
+  margin-top: 4px;
+}
+
+.role-tag {
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 /* DIREITA - INFO DO USUÁRIO */
@@ -83,6 +90,14 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
+
+.dash-right:hover {
+  background: var(--glass-bg-subtle);
 }
 
 .dash-avatar {
@@ -92,6 +107,12 @@
   object-fit: cover;
   border: 2px solid var(--accent-primary);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  transition: all 0.2s ease;
+}
+
+.dash-right:hover .dash-avatar {
+  border-color: var(--accent-secondary);
+  transform: scale(1.05);
 }
 
 .dash-info {
