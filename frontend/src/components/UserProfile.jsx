@@ -82,7 +82,7 @@ export default function UserProfile({ showToast, onClose }) {
     try {
       setLoading(true);
       
-      const res = await api.put(`/users/${user.id}`, {
+      const res = await api.put(`/auth/users/${user.id}`, {
         nome: formData.nome,
         email: formData.email,
         telefone: formData.telefone,

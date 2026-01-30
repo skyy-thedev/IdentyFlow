@@ -4,8 +4,8 @@ const Curso = require("../models/Cursos");
 const cursoController = require("../controllers/cursoController");
 const auth = require("../middlewares/authMiddleware");
 
-// Lista apenas cursos ativos
-router.get("/", auth([ "admin", "god"]), cursoController.getCursosAtivos);
+// Lista apenas cursos ativos - todos autenticados podem ver
+router.get("/", auth([]), cursoController.getCursosAtivos);
 
 router.post("/", auth(["admin", "god"]), async (req, res) => {
   try {
