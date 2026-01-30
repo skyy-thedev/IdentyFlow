@@ -17,7 +17,7 @@ function Inicio() {
   }, [user, setLocation]);
 
   useEffect(() => {
-    const newStars = Array.from({ length: 80 }).map(() => ({
+    const newStars = Array.from({ length: 60 }).map(() => ({
       top: Math.random() * 100 + "%",
       left: Math.random() * 100 + "%",
       size: Math.random() * 2 + 1,
@@ -27,7 +27,7 @@ function Inicio() {
   }, []);
 
   return (  
-    <>
+    <div className="home-page">
       {/* Fundo de estrelas */}
       <div className="stars">
         {stars.map((star, i) => (
@@ -45,15 +45,24 @@ function Inicio() {
         ))}
       </div>
 
-      <LoginForm />
-
       <div className='logo-container'>
-        <a href="http://www.identyflow.com.br">
-          <img src={logoIdentyFlow} alt="Logo" />
-          <p>SkyZ Design © 2025 All rights reserved</p>
+        <a href="https://www.identyflow.com.br">
+          <img src={logoIdentyFlow} alt="IdentyFlow Logo" />
         </a>
       </div>
-    </>
+
+      <LoginForm />
+
+      <p style={{ 
+        color: 'var(--text-muted)', 
+        fontSize: '0.8rem', 
+        marginTop: '32px',
+        position: 'relative',
+        zIndex: 10
+      }}>
+        SkyZ Design © 2025 All rights reserved
+      </p>
+    </div>
   );
 }
 

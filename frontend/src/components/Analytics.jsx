@@ -34,11 +34,11 @@ export default function Analytics() {
         api.get("/stats/dashboard")
       ]);
 
-      setCursosPopulares(cursosRes.data || []);
-      setCadastrosPorMes(cadastrosRes.data || []);
+      setCursosPopulares(Array.isArray(cursosRes.data) ? cursosRes.data : []);
+      setCadastrosPorMes(Array.isArray(cadastrosRes.data) ? cadastrosRes.data : []);
       
       // Calcular crescimento
-      const meses = cadastrosRes.data || [];
+      const meses = Array.isArray(cadastrosRes.data) ? cadastrosRes.data : [];
       let crescimento = 0;
       if (meses.length >= 2) {
         const atual = meses[meses.length - 1]?.total || 0;
@@ -78,7 +78,9 @@ export default function Analytics() {
     );
   }
 
-  const maxCadastros = Math.max(...cadastrosPorMes.map(m => m.total), 1);
+  const maxCadastros = cadastrosPorMes.length > 0 
+    ? Math.max(...cadastrosPorMes.map(m => m.total), 1) 
+    : 1;
 
   return (
     <div className="analytics-page">

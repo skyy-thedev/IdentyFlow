@@ -1,35 +1,78 @@
-.historico-container {
-  background-color: white;
-  border-radius: 9px;
-  padding: 3vh;
-  padding-bottom: 6vh; /* 🔥 sustenta a base */
-  margin: 5vh 0;
-  display: block;  
-  transition: all 0.25s ease; /* suaviza mudanças */
+/* ===================================
+   HISTÓRICO DE ALUNOS
+   Tema escuro consistente
+   =================================== */
+
+.historico-page {
+  padding: 24px;
+  color: var(--text-primary);
+  min-height: 100%;
 }
 
+.historico-page h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.historico-container {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin: 0;
+  display: block;  
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-lg);
+}
 
 .table-container {
   width: 100%;
   transition: all 0.25s ease;
   flex: 1;
-  overflow-y: auto;
-  margin-bottom: 6vh;
+  overflow-x: auto;
+  margin-top: 24px;
 }
 
+/* ===== TABELA ===== */
 .alunos-table {
   width: 100%;
-  table-layout: fixed; /* 🔥 ESSENCIAL */
+  table-layout: fixed;
   border-collapse: collapse;
+  color: var(--text-primary);
 }
 
 .alunos-table th,
 .alunos-table td {
-  padding: 12px 16px;
-  height: 5vh;
-  border-right: 1px solid #4a91e268;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
   text-align: center;
   vertical-align: middle;
+}
+
+.alunos-table th {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.alunos-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.alunos-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.alunos-table td {
+  color: var(--text-primary);
+  font-size: 0.95rem;
 }
 
 .alunos-table th:nth-child(1) { width: 20%; }
@@ -39,57 +82,45 @@
 .alunos-table th:nth-child(5) { width: 15%; }
 .alunos-table th:nth-child(6) { width: 10%; }
 
-
 /* ===== CONTAINER DO FILTRO ===== */
 .filtro-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  margin: 20px 0;
-  align-items: center; /* 🔥 ALINHA TODOS NA MESMA LINHA */
+  margin-bottom: 24px;
+  align-items: end;
 }
 
-/* ===== LABEL ===== */
 .filtro-container label {
-  font-weight: bold;
-  margin-bottom: 6px;
-  color: #000;
-  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-family: 'Inter', 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  display: block;
 }
 
 /* ===== INPUTS E SELECT ===== */
 .filtro-container input,
 .filtro-container select {
   box-sizing: border-box;
-
   width: 100%;
-  height: 56px;            /* 🔥 altura real e visual */
-  min-height: 56px;
-  max-height: 56px;
-
+  height: 52px;
   padding: 0 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
   outline: none;
-
-  display: flex;
-  align-items: center;     /* 🔥 centraliza conteúdo */
-  justify-content: center;
-
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.1rem;
-
-  background-color: #102946;
-  color: #fff;
+  font-family: 'Inter', 'Poppins', sans-serif;
+  font-size: 1rem;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
 }
 
-/* ===== INPUT DATE (CORREÇÃO DEFINITIVA) ===== */
 .filtro-container input[type="date"] {
   cursor: pointer;
 }
 
-/* 🔥 força alinhamento interno do texto do date */
 .filtro-container input[type="date"]::-webkit-datetime-edit {
   display: flex;
   align-items: center;
@@ -97,46 +128,64 @@
   height: 100%;
 }
 
-/* remove espaçamentos internos invisíveis */
 .filtro-container input[type="date"]::-webkit-inner-spin-button,
 .filtro-container input[type="date"]::-webkit-clear-button {
   display: none;
 }
 
-/* ===== PLACEHOLDER ===== */
-.filtro-container input::placeholder {
-  color: #fff;
+.filtro-container input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
 }
 
-/* ===== FOCUS ===== */
+.filtro-container input::placeholder {
+  color: var(--text-muted);
+}
+
 .filtro-container input:focus,
 .filtro-container select:focus {
-  border: 1px solid #4a90e2;
-  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-/* ===== SELECT (NORMALIZADO) ===== */
+/* ===== SELECT ===== */
 .filtro-container select {
-  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-
-  line-height: normal;
-
+  appearance: none;
   text-align: center;
   text-align-last: center;
-
   padding-right: 44px;
-
-  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%236366f1' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
   background-repeat: no-repeat;
   background-position: right 16px center;
   background-size: 18px;
+}
+
+/* ===== BOTÕES DE AÇÃO NA TABELA ===== */
+.alunos-table button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.alunos-table button:hover {
+  transform: translateY(-2px);
 }
 
 /* ===== RESPONSIVO ===== */
 @media (max-width: 900px) {
   .filtro-container {
     grid-template-columns: 1fr;
+  }
+  
+  .alunos-table th,
+  .alunos-table td {
+    padding: 12px 8px;
+    font-size: 0.85rem;
   }
 }

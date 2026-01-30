@@ -52,9 +52,10 @@ export default function Historico({ showToast }) {
   });
 
   return (
-    <div className="page">
+    <div className="historico-page">
+      <h1>📋 Histórico de Cadastros</h1>
+      
       <div className="historico-container">
-        <h1>HISTÓRICO DE CADASTROS</h1>
 
         <div className="filtro-container">
   <input

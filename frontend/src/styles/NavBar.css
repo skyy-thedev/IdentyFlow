@@ -1,440 +1,290 @@
-@media screen and (max-width: 768px) {
-  /* ----- CONTAINER PRINCIPAL ----- */
-  .sidebar {
-    height: 100vh;
-    width: 15vw;
-    background-color: #2A2A2A; /* Cor oficial da identidade IdentyFlow */
-    color: white;
-    top: 0;
-    left: 0;
-    display: flex;
-    position: fixed;
-    flex-direction: column;
-    align-items: center;
-    transition: width 0.3s ease;
-    overflow: hidden;
-    font-family: 'Inter';
-  }
+/* ===================================
+   SIDEBAR / NAVBAR
+   Design moderno com tema escuro
+   =================================== */
 
-  .sidebar.open {
-    width: 20vh;
-  }
-
-  /* ----- HEADER DO SIDEBAR ----- */
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 auto;
-    padding: 2vh;
-  }
-
-  /* Logo area */
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    filter: drop-shadow(3px 2px 0px #000000);
-  }
-
-  .logo-img {
-    width: 6vw;
-    height: auto;
-    cursor: pointer;
-    transition: all 0.5s ease;
-
-  }
-
-  .logo-text {
-    font-family: 'Inter';
-    font-size: 1.1rem;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
-
-  /* Botão de alternância */
-  .menu-btn {
-    cursor: pointer;
-  }
-
-  /* ----- MENU ----- */
-  .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    padding-top: 20px;
-    padding: 0.8vh;
-  }
-
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-
-    padding: 2vh 1vh;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-
-  .menu-item:hover {
-    background-color: #2d3a62;
-  }
-
-  .item-text {
-    font-size: 14px;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
-
-  /* ----- ANIMAÇÃO ----- */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+/* ----- CONTAINER PRINCIPAL ----- */
+.sidebar {
+  height: 100vh;
+  width: 80px;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16162a 100%);
+  color: var(--text-primary);
+  top: 0;
+  left: 0;
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  z-index: 1000;
+  border-right: 1px solid var(--border-color);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
 }
 
-@media screen and (min-width: 769px) and (max-width: 1367px) {
-    /* ----- CONTAINER PRINCIPAL ----- */
-  .sidebar {
-    height: 100vh;
-    width: 10vh;
-    background-color: #2A2A2A; /* Cor oficial da identidade IdentyFlow */
-    color: white;
-    top: 0;
-    left: 0;
-    display: flex;
-    position: fixed;
-    flex-direction: column;
-    transition: width 0.3s ease;
-    overflow: hidden;
-    font-family: 'Inter';
-  }
-
-  .sidebar.open {
-    width: 25vh;
-  }
-
-  /* ----- HEADER DO SIDEBAR ----- */
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 auto;
-    padding: 2vh;
-  }
-
-  /* Logo area */
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .logo-img {
-    width: 35px;
-    height: auto;
-    cursor: pointer;
-    transition: all 0.5s ease;
-    filter: drop-shadow(3px 2px 0px #000000);
-  }
-
-  .logo-img:hover {
-    transform: scale(1.05);
-  }
-
-  .logo-text {
-    font-size: 18px;
-    font-weight: 600;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
-
-  /* Botão de alternância */
-  .menu-btn {
-    cursor: pointer;
-  }
-
-  /* ----- MENU ----- */
-  .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    padding-top: 20px;
-    padding: 0.8vh;
-  }
-
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-
-    padding: 15px 20px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-
-  .menu-item:hover {
-    background-color: #2d3a62;
-  }
-
-  .item-text {
-    font-size: 14px;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
-
-  .nav-footer {
-    display: flex;
-    position: relative;
-    padding: 1vh;
-    justify-content: center;
-  }
-
-  #footer-logo {
-    width: 50px;
-    height: auto;
-    margin: 0 auto;
-    transition: all 0.5s ease;
-  }
-
-  #footer-logo:hover {
-    transform: translateY(-1vh);
-  }
-
-  .nav-footer h3 {
-    font-family: 'Inter', sans-serif;
-    font-size: 8px;
-    margin-top: -0.5vh;
-  }
-
-  /* ----- ANIMAÇÃO ----- */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+.sidebar.open {
+  width: 280px;
 }
 
-@media screen and (min-width: 1368px) and (max-width: 1920px) {
-    /* ----- CONTAINER PRINCIPAL ----- */
-  .sidebar {
-    height: 100vh;
-    width: 10vh;
-    background-color: #2A2A2A; /* Cor oficial da identidade IdentyFlow */
-    color: white;
-    top: 0;
-    left: 0;
-    display: flex;
-    position: fixed;
-    flex-direction: column;
-    transition: width 0.3s ease;
-    overflow: hidden;
-    font-family: 'Inter';
-    z-index: 9999;
-  }
-
-  .sidebar.open {
-    width: 25vh;
-  }
-
-  /* ----- HEADER DO SIDEBAR ----- */
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 auto;
-    padding: 2vh;
-  }
-
-  /* Logo area */
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .logo-img {
-    width: 35px;
-    height: auto;
-    cursor: pointer;
-    transition: all 0.5s ease;
-    filter: drop-shadow(3px 2px 0px #000000);
-  }
-
-  .logo-img:hover {
-    transform: scale(1.05);
-  }
-
-  .logo-text {
-    font-size: 18px;
-    font-weight: 600;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
-
-  /* Botão de alternância */
-  .menu-btn {
-    cursor: pointer;
-  }
-
-  /* ----- MENU ----- */
-  .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    padding-top: 20px;
-    padding: 1.5vh;
-  }
-
-  .menu-item {
+/* ----- HEADER DO SIDEBAR ----- */
+.sidebar-header {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 2vh 1vw;
+  justify-content: center;
+  padding: 24px 16px;
+  border-bottom: 1px solid var(--border-color);
+  min-height: 80px;
+}
+
+.sidebar.open .sidebar-header {
+  justify-content: space-between;
+  padding: 24px 20px;
+}
+
+/* Logo area */
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.3));
+}
+
+.logo-img:hover {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  opacity: 0;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeIn 0.3s forwards;
+}
+
+/* Botão de alternância */
+.menu-btn {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.menu-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--accent-primary);
+}
+
+/* ----- MENU ----- */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  flex: 1;
+  gap: 4px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #ffffff;
-  border-radius: 8px;
-  text-align: left;
-  }
+  color: var(--text-secondary);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
 
-  /* Hover (passar o mouse) */
-  .menu-item:hover {
-    color: #4da6ff;
-  }
+.menu-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: var(--accent-primary);
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+  border-radius: 0 4px 4px 0;
+}
 
-  /* Ativo (clicado/selecionado) */
-  .menu-item.active {
-    background-color: #2d3a62;
-    color: #4da6ff;
-  }
+.menu-item:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--text-primary);
+}
 
-  .item-text {
-    font-size: 14px;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
+.menu-item:hover::before {
+  transform: scaleY(0.5);
+}
 
-  /* ----- ANIMAÇÃO ----- */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Ativo (clicado/selecionado) */
+.menu-item.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.1));
+  color: var(--accent-primary);
+}
+
+.menu-item.active::before {
+  transform: scaleY(1);
+}
+
+.menu-item svg,
+.menu-item .menu-icon {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover svg,
+.menu-item.active svg {
+  transform: scale(1.1);
+}
+
+.item-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0;
+  white-space: nowrap;
+  animation: fadeIn 0.3s forwards;
+}
+
+/* ----- FOOTER ----- */
+.nav-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px;
+  border-top: 1px solid var(--border-color);
+  gap: 8px;
+}
+
+#footer-logo {
+  width: 36px;
+  height: auto;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+#footer-logo:hover {
+  transform: translateY(-4px);
+  opacity: 1;
+}
+
+.nav-footer h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin: 0;
+  text-align: center;
+}
+
+/* ----- ANIMAÇÃO ----- */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateX(-8px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0);
   }
 }
 
-@media screen and (min-width: 1921px) and (max-width: 2460px) {
-  
-  /* ----- CONTAINER PRINCIPAL ----- */
+/* ===================================
+   RESPONSIVIDADE
+   =================================== */
+
+@media (max-width: 1024px) {
   .sidebar {
-    height: 100vh;
-    width: 10vh;
-    background-color: #2A2A2A; /* Cor oficial da identidade IdentyFlow */
-    color: white;
-    top: 0;
-    left: 0;
-    display: flex;
-    position: fixed;
-    flex-direction: column;
-    transition: width 0.3s ease;
-    overflow: hidden;
-    font-family: 'Inter';
+    width: 70px;
   }
-
+  
   .sidebar.open {
-    width: 25vh;
+    width: 260px;
   }
-
-  /* ----- HEADER DO SIDEBAR ----- */
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 auto;
-    padding: 2vh;
-  }
-
-  /* Logo area */
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
+  
   .logo-img {
-    width: 35px;
-    height: auto;
-    cursor: pointer;
-    transition: all 0.5s ease;
-    filter: drop-shadow(3px 2px 0px #000000);
+    width: 36px;
+    height: 36px;
   }
+}
 
-  .logo-img:hover {
-    transform: scale(1.05);
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+    transform: translateX(-100%);
   }
-
-  .logo-text {
-    font-size: 18px;
-    font-weight: 600;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
+  
+  .sidebar.open {
+    width: 280px;
+    transform: translateX(0);
   }
-
-  /* Botão de alternância */
-  .menu-btn {
-    cursor: pointer;
+  
+  /* Overlay para mobile */
+  .sidebar.open::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 280px;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
   }
+}
 
-  /* ----- MENU ----- */
-  .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    padding-top: 20px;
-    padding: 0.8vh;
-  }
+/* ===================================
+   HOVER STATES MELHORADOS
+   =================================== */
 
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.sidebar:not(.open) .menu-item {
+  justify-content: center;
+  padding: 14px;
+}
 
-    padding: 15px 20px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
+.sidebar:not(.open) .menu-item:hover {
+  transform: scale(1.05);
+}
 
-  .menu-item:hover {
-    background-color: #2d3a62;
-  }
+/* Tooltip para sidebar fechada */
+.sidebar:not(.open) .menu-item {
+  position: relative;
+}
 
-  .item-text {
-    font-size: 14px;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
+.sidebar:not(.open) .menu-item::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 100%;
+  margin-left: 12px;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  z-index: 1001;
+}
 
-  .nav-footer {
-    display: flex;
-    position: relative;
-    padding: 1vh;
-    justify-content: center;
-  }
-
-  #footer-logo {
-    width: 50px;
-    height: auto;
-    margin: 0 auto;
-    transition: all 0.5s ease;
-  }
-
-  #footer-logo:hover {
-    transform: translateY(-1vh);
-  }
-
-  .nav-footer h3 {
-    font-family: 'Inter', sans-serif;
-    font-size: 8px;
-    margin-top: -0.5vh;
-  }
-
-  /* ----- ANIMAÇÃO ----- */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+.sidebar:not(.open) .menu-item:hover::after {
+  opacity: 1;
+  visibility: visible;
 }

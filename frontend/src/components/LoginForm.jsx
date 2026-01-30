@@ -83,38 +83,42 @@ export default function LoginForm() {
       )}
 
       <div className="login">
-
         <h1>Acesse sua conta</h1>
+        <p>Entre com suas credenciais para acessar o sistema</p>
 
         <form onSubmit={handleLogin}>
-          <label htmlFor="emailInput">E-mail:</label> <br />
-          <input
-            id="emailInput"
-            type="email"
-            placeholder="Digite seu e-mail"
-            autoComplete="off"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          /><br />
+          <div className="form-group">
+            <label htmlFor="emailInput">E-mail</label>
+            <input
+              id="emailInput"
+              type="email"
+              placeholder="Digite seu e-mail"
+              autoComplete="off"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-          <label htmlFor="passInput">Senha:</label> <br />
-          <input
-            id="passInput"
-            type="password"
-            placeholder="Digite sua senha"
-            autoComplete="new-password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          /><br />
+          <div className="form-group">
+            <label htmlFor="passInput">Senha</label>
+            <input
+              id="passInput"
+              type="password"
+              placeholder="Digite sua senha"
+              autoComplete="new-password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+          </div>
 
           <button id="send-btn" type="submit" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
 
-        <p>
-          Esqueceu a sua senha? <br /> <a href="/forget">Recuperar Senha</a>
-        </p>
+        <div className="login-links">
+          <a href="/forget">Esqueceu a senha?</a>
+        </div>
       </div>
     </>
   );

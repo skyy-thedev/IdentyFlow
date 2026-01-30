@@ -39,8 +39,14 @@ export default function Turmas() {
         api.get("/turmas").catch(() => ({ data: [] })),
         api.get("/cursos").catch(() => ({ data: [] }))
       ]);
-      setTurmas(turmasRes.data || []);
-      setCursos(cursosRes.data || []);
+      
+      // Garantir que turmas é sempre um array
+      const turmasData = turmasRes.data;
+      setTurmas(Array.isArray(turmasData) ? turmasData : []);
+      
+      // Garantir que cursos é sempre um array
+      const cursosData = cursosRes.data;
+      setCursos(Array.isArray(cursosData) ? cursosData : []);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       showToast("Erro ao carregar turmas", "error");
@@ -121,6 +127,7 @@ export default function Turmas() {
   };
 
   const getCursoNome = (cursoId) => {
+    if (!Array.isArray(cursos)) return "Sem curso";
     const curso = cursos.find(c => c._id === cursoId);
     return curso?.titulo || "Sem curso";
   };
@@ -139,10 +146,10 @@ export default function Turmas() {
     return new Date(dateString).toLocaleDateString("pt-BR");
   };
 
-  const filteredTurmas = turmas.filter(turma =>
+  const filteredTurmas = Array.isArray(turmas) ? turmas.filter(turma =>
     turma.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     getCursoNome(turma.cursoId)?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) : [];
 
   if (loading) {
     return (
@@ -273,7 +280,7 @@ export default function Turmas() {
                 required
               >
                 <option value="">Selecione um curso</option>
-                {cursos.map(curso => (
+                {Array.isArray(cursos) && cursos.map(curso => (
                   <option key={curso._id} value={curso._id}>
                     {curso.titulo}
                   </option>

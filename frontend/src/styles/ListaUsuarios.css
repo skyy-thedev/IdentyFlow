@@ -1,140 +1,183 @@
+/* ===================================
+   LISTA DE USUÁRIOS
+   Tema escuro consistente
+   =================================== */
+
 .lista-container {
-  color: white;
-  width: 36vw;
+  color: var(--text-primary);
+  width: 100%;
+  max-width: 900px;
   animation: fadeIn 0.4s ease-in-out;
-  font-family: 'Inter';
-  margin: 0 0 0 5vw;
+  font-family: 'Inter', sans-serif;
+  padding: 24px;
 }
 
 .lista-container h2 {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-  font-weight: 600;
+  font-size: 1.75rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .lista-container p {
-  margin-bottom: 20px;
-  opacity: 0.8;
+  margin-bottom: 24px;
+  color: var(--text-secondary);
 }
 
 /* Botão ADD */
 .btn-add {
-  background-color:#1f2a48;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   border: none;
-  padding: 12px 20px;
+  padding: 12px 24px;
   color: white;
-  font-family: 'Poppins';
-  font-weight: light;
-  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
   transition: all 0.2s ease;
-  box-shadow: 0 0 10px #1f2a48;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-add:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 18px #1f2a48;
-  background-color: #4a90e2;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
 }
 
 /* Tabela */
 .user-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 10px;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 
 .user-table th,
 .user-table td {
-  padding: 14px 18px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 16px 20px;
+  text-align: left;
 }
 
 .user-table th {
-  background: rgba(255,255,255,0.08);
-  font-size: 1rem;
-  letter-spacing: 0.7px;
-  color: white;
+  background: var(--bg-tertiary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
 }
 
-.user-table tr:hover {
-  background: rgba(255,255,255,0.07);
-  transition: 0.2s ease;
+.user-table td {
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.user-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.user-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.user-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 /* Roles */
 .role {
-  font-weight: bold;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
 }
 
 .role.god {
-  color: #ffd700;
-  text-shadow: 0 0 8px #ffd7007a;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.5);
 }
 
 .role.admin {
-  color: #4da6ff;
-  text-shadow: 0 0 8px #4da6ff7a;
+  color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.15);
+  text-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
 }
 
 .role.instrutor {
-  color: #7cff7c;
-  text-shadow: 0 0 8px #7cff7c7a;
+  color: var(--status-success);
+  background: rgba(16, 185, 129, 0.15);
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
 }
 
 /* AÇÕES */
 .acoes {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* Botão EDIT */
 .btn-edit {
-  background: rgba(90, 160, 255, 0.15);
-  border: 1px solid rgba(90, 160, 255, 0.3);
-  padding: 8px 14px;
-  border-radius: 6px;
-  color: white;
+  background: rgba(99, 102, 241, 0.15);
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  color: var(--accent-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-edit:hover {
-  background: rgba(90, 160, 255, 0.3);
-  transform: scale(1.05);
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-2px);
 }
 
 /* Botão DELETE */
 .btn-del {
-  background: rgba(255, 80, 80, 0.15);
-  border: 1px solid rgba(255, 80, 80, 0.3);
-  padding: 8px 14px;
-  border-radius: 6px;
-  color: #ff6b6b;
+  background: rgba(239, 68, 68, 0.15);
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  color: var(--status-danger);
+  font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-del:hover {
-  background: rgba(255, 80, 80, 0.3);
-  transform: scale(1.05);
+  background: var(--status-danger);
+  color: white;
+  transform: translateY(-2px);
 }
 
 /* Mensagens */
 .loading,
 .erro {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin-top: 20px;
-  opacity: 0.8;
-  color: #ff6b6b;
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--status-danger);
 }
 
 /* Animação */

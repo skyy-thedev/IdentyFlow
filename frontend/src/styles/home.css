@@ -1,61 +1,37 @@
-@media screen and (max-width: 768px) {
-/* ================= BASE ================= */
-body {
-  background: radial-gradient(circle at 20% 20%, #0c101c, #1F2A48 80%);
-  color: #f4f4f9;
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 1px;
-  text-align: center;
-  margin: 0;
+/* ===================================
+   HOME / LOGIN PAGE
+   Design moderno com tema escuro
+   =================================== */
+
+/* ================= PÁGINA LOGIN ================= */
+.home-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  background: radial-gradient(ellipse at 20% 20%, #1a1a3e, var(--bg-primary) 70%);
   position: relative;
+  overflow: hidden;
+  padding: 24px;
 }
 
 /* ================= FUNDO ANIMADO ================= */
-body::before {
+.home-page::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 30%, #110a5b, transparent 70%);
-  filter: blur(60px);
-  opacity: 0.4;
-  z-index: -2;
-  pointer-events: none;
-  animation: floatBg 20s infinite ease-in-out;
-}
-
-body::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 70% 70%, rgba(6, 15, 67, 0.717), transparent 60%),
-    radial-gradient(circle at 20% 30%, rgba(8, 6, 78, 0.396), transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(24, 2, 49, 0.861), transparent 50%);
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.15), transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(168, 85, 247, 0.1), transparent 50%);
   filter: blur(80px);
-  opacity: 0.35;
-  z-index: -3;
   pointer-events: none;
   animation: bgFlow 30s infinite alternate ease-in-out;
 }
 
-/* ================= ANIMAÇÕES DO FUNDO ================= */
-@keyframes floatBg {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(10px, -10px); }
-  100% { transform: translate(0, 0); }
-}
-
 @keyframes bgFlow {
   0% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(-15px, 10px) scale(1.02); }
-  50% { transform: translate(10px, -15px) scale(1.01); }
-  75% { transform: translate(-10px, 15px) scale(1.03); }
+  50% { transform: translate(-20px, 20px) scale(1.05); }
   100% { transform: translate(0, 0) scale(1); }
 }
 
@@ -63,831 +39,298 @@ body::after {
 .stars {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
+
 .star {
   position: absolute;
   background: white;
   border-radius: 50%;
-  opacity: 0.8;
+  opacity: 0.6;
   animation: twinkle 3s infinite alternate;
 }
+
 @keyframes twinkle {
   from { opacity: 0.3; transform: scale(1); }
-  to { opacity: 1; transform: scale(1.3); }
+  to { opacity: 0.8; transform: scale(1.2); }
 }
 
-
-/* ================= CARD DE LOGIN ================= */
-.login {
-  position: relative;
-  background: #D9DFE8;
-  color: #2A2A2A;
-  border-radius: 22px;
-  width: 80vw;
-  padding: 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeInUp 0.8s ease forwards;
-  transform-style: preserve-3d;
-}
-
-.login p {
-  padding-top: 3vh;
-  font-size: 1rem;
-}
-
-.login a {
-  color: #4A90E2;
-}
-
-a {
-  color: white;
-  text-decoration: none;
-}
-
-/* ================= INPUTS ================= */
-input {
-  text-align: center;
-  width: 60vw;
-  border: 1px solid #4A90E2;
-  border-radius: 12px;
-  background: #F5F7FA;
-  color: #2A2A2A;
-  padding: 12px 15px;
-  margin: 1vh 0;
-  outline: none;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-}
-input::placeholder { color: #2a2a2a5e; }
-input:hover { border-color: #4A90E2; box-shadow: 0 0 6px #1f2a484f; }
-input:focus { border-color: #4A90E2; box-shadow: 0 0 10px #1f2a48c4; }
-input:-webkit-autofill {
-  box-shadow: 0 0 0px 1000px #1f2a4862 inset !important;
-  -webkit-text-fill-color: white !important;
-  caret-color: white !important;
-}
-
-/* ================= BOTÕES ================= */
-#send-btn, #btn-to-transform {
-  cursor: pointer;
-  font-weight: 600;
-  color: white;
-  border-radius: 25px;
-  box-shadow: 0 0 8px #1f2a4860;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
-}
-
-/* BOTÃO ENVIAR */
-#send-btn {
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 1px;
-  width: 40vw;
-  height: 3rem;
-  border-radius: 22px;
-  border: none;
-  background: linear-gradient(90deg, #4A90E2, #1F2A48);
-}
-#send-btn:hover { transform: translateY(-3px); box-shadow: 0 0 20px #4A90E2; }
-
+/* ================= LOGO CONTAINER ================= */
 .logo-container {
   position: relative;
-  margin: 0 auto;
-  width: 40vw;
-  height: auto;
-  font-size: 10px;
-  z-index: 1000;
-  opacity: 1;
-  transition: opacity 1s ease-in-out;
+  z-index: 10;
+  margin-bottom: 32px;
+  text-align: center;
   cursor: pointer;
   text-decoration: none;
-}
-
-
-.logo-container p {
-  margin-top: -3vh;
-  margin-bottom: -10vh;
-  width: 80vw;
-  margin-left: -9vh;
 }
 
 .logo-container img {
-  width: 100%;
+  width: 120px;
   height: auto;
-  margin-top: 10vh;
-  transition: filter 0.3s ease;
-  animation: neonPulse 2.5s infinite alternate;
-}
-
-/* Animação neon pulsante */
-@keyframes neonPulse {
-  0% {
-    filter:
-    drop-shadow(0 0 6px #4A90E2)
-    drop-shadow(0 0 12px #1F2A48)
-    drop-shadow(0 0 18px #A68CFF);
-  }
-  100% {
-    filter:
-      drop-shadow(0 0 4px #4A90E2)
-      drop-shadow(0 0 8px #1F2A48)
-      drop-shadow(0 0 12px #A68CFF);
-  }
-}
-
-
-/* Efeito de pulso leve */
-@keyframes logoPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
-}
-
-/* ================= ANIMAÇÃO DE ENTRADA ================= */
-@keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
-
-}
-
-@media screen and (min-width:769px) and (max-width: 1367px) {
-/* ================= BASE ================= */
-body {
-  background: radial-gradient(circle at 20% 20%, #0c101c, #1F2A48 80%);
-  color: #f4f4f9;
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 1px;
-  text-align: center;
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
-
-/* ================= FUNDO ANIMADO ================= */
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 30% 30%, #110a5b, transparent 70%);
-  filter: blur(60px);
-  opacity: 0.4;
-  z-index: -2;
-  pointer-events: none;
-  animation: floatBg 20s infinite ease-in-out;
-}
-
-body::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 70% 70%, rgba(6, 15, 67, 0.717), transparent 60%),
-    radial-gradient(circle at 20% 30%, rgba(8, 6, 78, 0.396), transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(24, 2, 49, 0.861), transparent 50%);
-  filter: blur(80px);
-  opacity: 0.35;
-  z-index: -3;
-  pointer-events: none;
-  animation: bgFlow 30s infinite alternate ease-in-out;
-}
-
-/* ================= ANIMAÇÕES DO FUNDO ================= */
-@keyframes floatBg {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(10px, -10px); }
-  100% { transform: translate(0, 0); }
-}
-
-@keyframes bgFlow {
-  0% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(-15px, 10px) scale(1.02); }
-  50% { transform: translate(10px, -15px) scale(1.01); }
-  75% { transform: translate(-10px, 15px) scale(1.03); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-/* ================= ESTRELAS ================= */
-.stars {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-}
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: twinkle 3s infinite alternate;
-}
-@keyframes twinkle {
-  from { opacity: 0.3; transform: scale(1); }
-  to { opacity: 1; transform: scale(1.3); }
-}
-
-
-/* ================= CARD DE LOGIN ================= */
-.login {
-  position: relative;
-  background: #D9DFE8;
-  color: #2A2A2A;
-  border: 1px solid #4A90E2;
-  border-radius: 20px;
-  width: 40vw;
-  padding: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeInUp 0.8s ease forwards;
-  transform-style: preserve-3d;
-}
-
-.login:hover {
-  transform: scale(1.2);
-  box-shadow: 0 8px 20px #1f2a48;
-}
-
-.login p {
-  padding-top: 25px;
-  font-size: 12px;
-}
-
-.login a {
-  color: #4A90E2;
-}
-
-a {
-  color: white;
-  text-decoration: none;
-}
-
-a:hover {
-  color: white;
-}
-
-/* ================= INPUTS ================= */
-input {
-  text-align: center;
-  width: 40%;
-  border: 1px solid #4A90E2;
-  border-radius: 12px;
-  background: #F5F7FA;
-  color: #2A2A2A;
-  padding: 12px 15px;
-  margin: 12px 0;
-  outline: none;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-}
-input::placeholder { color: #2a2a2a5e; }
-input:hover { border-color: #4A90E2; box-shadow: 0 0 6px #1f2a484f; }
-input:focus { border-color: #4A90E2; box-shadow: 0 0 10px #1f2a48c4; }
-input:-webkit-autofill {
-  box-shadow: 0 0 0px 1000px #1f2a4862 inset !important;
-  -webkit-text-fill-color: white !important;
-  caret-color: white !important;
-}
-
-/* ================= BOTÕES ================= */
-#send-btn, #btn-to-transform {
-  cursor: pointer;
-  font-weight: 600;
-  color: white;
-  border-radius: 25px;
-  box-shadow: 0 0 8px #1f2a4860;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
-}
-
-/* BOTÃO ENVIAR */
-#send-btn {
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 1px;
-  width: 15vw;
-  height: 5vh;
-  border-radius: 15px;
-  border: 1px solid #4A90E2;
-  background: linear-gradient(90deg, #4A90E2, #1F2A48);
-}
-#send-btn:hover { transform: translateY(-3px); box-shadow: 0 0 20px #4A90E2; }
-
-.logo-container {
-  position: relative;
-  margin: 0 auto;
-  width: 10vw;
-  height: auto;
-  font-size: 10px;
-  z-index: 1000;
-  opacity: 1;
-  transition: opacity 1s ease-in-out;
-  cursor: pointer;
-  text-decoration: none;
-  align-content: center;
-}
-
-
-.logo-container p {
-  padding: 1vh;
-  width: 9vw;
-  margin-bottom: -5vh;
-}
-
-.logo-container img {
-  width: 100%;
-  height: auto;
-  margin-top: 5vh;
-  margin-bottom: -5vh;
-  transition: filter 0.3s ease;
-  animation: neonPulse 2.5s infinite alternate;
-}
-
-/* Animação neon pulsante */
-@keyframes neonPulse {
-  0% {
-    filter:
-    drop-shadow(0 0 6px #4A90E2)
-    drop-shadow(0 0 12px #1F2A48)
-    drop-shadow(0 0 18px #A68CFF);
-  }
-  100% {
-    filter:
-      drop-shadow(0 0 4px #4A90E2)
-      drop-shadow(0 0 8px #1F2A48)
-      drop-shadow(0 0 12px #A68CFF);
-  }
-}
-
-
-/* Efeito de pulso leve */
-@keyframes logoPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
-}
-
-/* ================= ANIMAÇÃO DE ENTRADA ================= */
-@keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
-
-}
-
-@media (min-width:1368px) and (max-width: 1920px) {
-  /* ================= BASE ================= */
-body {
-  background: radial-gradient(circle at 20% 20%, #0c101c, #1F2A48 80%);
-  color: #f4f4f9;
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 1px;
-  text-align: center;
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
-
-/* ================= FUNDO ANIMADO ================= */
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 30% 30%, #110a5b, transparent 70%);
-  filter: blur(60px);
-  opacity: 0.4;
-  z-index: -2;
-  pointer-events: none;
-  animation: floatBg 20s infinite ease-in-out;
-}
-
-body::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 70% 70%, rgba(6, 15, 67, 0.717), transparent 60%),
-    radial-gradient(circle at 20% 30%, rgba(8, 6, 78, 0.396), transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(24, 2, 49, 0.861), transparent 50%);
-  filter: blur(80px);
-  opacity: 0.35;
-  z-index: -3;
-  pointer-events: none;
-  animation: bgFlow 30s infinite alternate ease-in-out;
-}
-
-/* ================= ANIMAÇÕES DO FUNDO ================= */
-@keyframes floatBg {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(10px, -10px); }
-  100% { transform: translate(0, 0); }
-}
-
-@keyframes bgFlow {
-  0% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(-15px, 10px) scale(1.02); }
-  50% { transform: translate(10px, -15px) scale(1.01); }
-  75% { transform: translate(-10px, 15px) scale(1.03); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-/* ================= ESTRELAS ================= */
-.stars {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-}
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: twinkle 3s infinite alternate;
-}
-@keyframes twinkle {
-  from { opacity: 0.3; transform: scale(1); }
-  to { opacity: 1; transform: scale(1.3); }
-}
-
-
-/* ================= CARD DE LOGIN ================= */
-.login {
-  position: relative;
-  background: #d9dfe8;
-  color: #2A2A2A;
-  border: 1px solid #4A90E2;
-  border-radius: 20px;
-  width: 40vw;
-  padding: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeInUp 0.8s ease forwards;
-  transform-style: preserve-3d;
-  justify-items: center;
-}
-
-.login p {
-  padding-top: 25px;
-  font-size: 1rem;
-}
-
-.login a {
-  color: #4A90E2;
-}
-
-a {
-  color: white;
-  text-decoration: none;
-}
-
-a:hover {
-  font-weight: bold;
-}
-
-.login form {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  width: 20vw;
-}
-
-.login form input {
-  border: 1px solid #4A90E2;
-  border-radius: 12px;
-  background: #F5F7FA;
-  color: #2A2A2A;
-  outline: none;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-.login form label {
-  margin-bottom: -1vh;
-}
-
-.login form input::placeholder { color: #2a2a2ad8; } 
-.login form input:hover { border-color: #4A90E2; box-shadow: 0 0 6px #1f2a484f; }
-.login form input:focus { border-color: #4A90E2; box-shadow: 0 0 10px #1f2a48c4; }
-.login form input:-webkit-autofill {
-  box-shadow: 0 0 0px 1000px #1f2a4862 inset !important;
-  -webkit-text-fill-color: white !important;
-  caret-color: white !important;
-}
-
-/* ================= BOTÕES ================= */
-/* BOTÃO ENVIAR */
-#send-btn {
-  font-family: "Inter", sans-serif;
-  font-size: 1rem;
-  letter-spacing: 1px;
-  cursor: pointer;
-  color: white;
-  border-radius: 25px;
-  box-shadow: 0 0 8px #1f2a4860;
   transition: all 0.3s ease;
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
-  width: 10vw;
-  height: 5vh;
-  border-radius: 15px;
-  border: 1px solid #4A90E2;
-  background: linear-gradient(90deg, #4A90E2, #1F2A48);
-  margin: 0 auto;
-}
-#send-btn:hover { transform: scale(1.08); box-shadow: 2px 2px 20px #4A90E2; }
-
-.logo-container {
-  position: relative;
-  margin: 0 auto;
-  width: 10vw;
-  height: auto;
-  font-size: 10px;
-  z-index: 1000;
-  opacity: 1;
-  transition: opacity 1s ease-in-out;
-  cursor: pointer;
-  text-decoration: none;
+  filter: drop-shadow(0 8px 24px rgba(99, 102, 241, 0.4));
+  animation: neonPulse 3s infinite alternate;
 }
 
+.logo-container img:hover {
+  transform: scale(1.05);
+}
 
 .logo-container p {
-  margin-top: -3vh;
-  margin-bottom: -10vh;
-  width: 16vw;
-  margin-left: -6vh;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 12px;
 }
 
-.logo-container img {
-  width: 100%;
-  height: auto;
-  margin-top: 5vh;
-  transition: filter 0.3s ease;
-  animation: neonPulse 2.5s infinite alternate;
-}
-
-/* Animação neon pulsante */
 @keyframes neonPulse {
   0% {
-    filter:
-    drop-shadow(0 0 6px #4A90E2)
-    drop-shadow(0 0 12px #1F2A48)
-    drop-shadow(0 0 18px #A68CFF);
+    filter: drop-shadow(0 8px 24px rgba(99, 102, 241, 0.4));
   }
   100% {
-    filter:
-      drop-shadow(0 0 4px #4A90E2)
-      drop-shadow(0 0 8px #1F2A48)
-      drop-shadow(0 0 12px #A68CFF);
+    filter: drop-shadow(0 8px 32px rgba(168, 85, 247, 0.5));
   }
 }
-
-
-/* Efeito de pulso leve */
-@keyframes logoPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
-}
-
-/* ================= ANIMAÇÃO DE ENTRADA ================= */
-@keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
-
-}
-
-@media screen and (min-width:1921px) and (max-width: 2560px) {
-  
-/* ================= BASE ================= */
-body {
-  background: radial-gradient(circle at 20% 20%, #0c101c, #1F2A48 80%);
-  color: #f4f4f9;
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 1px;
-  text-align: center;
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
-
-/* ================= FUNDO ANIMADO ================= */
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 30% 30%, #110a5b, transparent 70%);
-  filter: blur(60px);
-  opacity: 0.4;
-  z-index: -2;
-  pointer-events: none;
-  animation: floatBg 20s infinite ease-in-out;
-}
-
-body::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 70% 70%, rgba(6, 15, 67, 0.717), transparent 60%),
-    radial-gradient(circle at 20% 30%, rgba(8, 6, 78, 0.396), transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(24, 2, 49, 0.861), transparent 50%);
-  filter: blur(80px);
-  opacity: 0.35;
-  z-index: -3;
-  pointer-events: none;
-  animation: bgFlow 30s infinite alternate ease-in-out;
-}
-
-/* ================= ANIMAÇÕES DO FUNDO ================= */
-@keyframes floatBg {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(10px, -10px); }
-  100% { transform: translate(0, 0); }
-}
-
-@keyframes bgFlow {
-  0% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(-15px, 10px) scale(1.02); }
-  50% { transform: translate(10px, -15px) scale(1.01); }
-  75% { transform: translate(-10px, 15px) scale(1.03); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-/* ================= ESTRELAS ================= */
-.stars {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-}
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: twinkle 3s infinite alternate;
-}
-@keyframes twinkle {
-  from { opacity: 0.3; transform: scale(1); }
-  to { opacity: 1; transform: scale(1.3); }
-}
-
 
 /* ================= CARD DE LOGIN ================= */
 .login {
   position: relative;
-  background: #D9DFE8;
-  color: #2A2A2A;
-  border: 1px solid #4A90E2;
-  border-radius: 20px;
-  width: 40vw;
-  padding: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeInUp 0.8s ease forwards;
-  transform-style: preserve-3d;
+  z-index: 10;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  animation: fadeInUp 0.6s ease forwards;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
 }
 
-.login:hover {
-  transform: scale(1.2);
-  box-shadow: 0 8px 20px #1f2a48;
+.login h1,
+.login h2 {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .login p {
-  padding-top: 25px;
-  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
 }
 
 .login a {
-  color: #4A90E2;
-}
-
-a {
-  color: white;
+  color: var(--accent-primary);
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
-a:hover {
-  color: #2A2A2A;
+.login a:hover {
+  color: var(--accent-secondary);
+}
+
+/* ================= FORM ================= */
+.login form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 /* ================= INPUTS ================= */
-input {
-  text-align: center;
-  width: 40%;
-  border: 1px solid #4A90E2;
-  border-radius: 12px;
-  background: #F5F7FA;
-  color: #2A2A2A;
-  padding: 12px 15px;
-  margin: 12px 0;
-  outline: none;
+.login input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
   font-size: 1rem;
-  font-weight: 500;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: all 0.2s ease;
 }
-input::placeholder { color: #2a2a2a5e; }
-input:hover { border-color: #4A90E2; box-shadow: 0 0 6px #1f2a484f; }
-input:focus { border-color: #4A90E2; box-shadow: 0 0 10px #1f2a48c4; }
-input:-webkit-autofill {
-  box-shadow: 0 0 0px 1000px #1f2a4862 inset !important;
-  -webkit-text-fill-color: white !important;
-  caret-color: white !important;
+
+.login input::placeholder {
+  color: var(--text-muted);
+}
+
+.login input:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.login input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.login input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px var(--bg-tertiary) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  caret-color: var(--text-primary) !important;
 }
 
 /* ================= BOTÕES ================= */
-#send-btn, #btn-to-transform {
-  cursor: pointer;
-  font-weight: 600;
-  color: white;
-  border-radius: 25px;
-  box-shadow: 0 0 8px #1f2a4860;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
-}
-
-/* BOTÃO ENVIAR */
-#send-btn {
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 1px;
-  width: 6rem;
-  height: 3rem;
-  border-radius: 15px;
-  border: 1px solid #4A90E2;
-  background: linear-gradient(90deg, #4A90E2, #1F2A48);
-}
-#send-btn:hover { transform: translateY(-3px); box-shadow: 0 0 20px #4A90E2; }
-
-.logo-container {
-  position: relative;
-  margin: 0 auto;
-  width: 10vw;
-  height: auto;
-  font-size: 10px;
-  z-index: 1000;
-  opacity: 1;
-  transition: opacity 1s ease-in-out;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-
-.logo-container p {
-  margin-top: -3vh;
-  margin-bottom: -10vh;
-  width: 16vw;
-  margin-left: -6vh;
-}
-
-.logo-container img {
+#send-btn,
+.login button[type="submit"],
+.btn-login {
   width: 100%;
-  height: auto;
-  margin-top: 10vh;
-  transition: filter 0.3s ease;
-  animation: neonPulse 2.5s infinite alternate;
+  padding: 14px 24px;
+  margin-top: 8px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
 }
 
-/* Animação neon pulsante */
-@keyframes neonPulse {
-  0% {
-    filter:
-    drop-shadow(0 0 6px #4A90E2)
-    drop-shadow(0 0 12px #1F2A48)
-    drop-shadow(0 0 18px #A68CFF);
+#send-btn:hover,
+.login button[type="submit"]:hover,
+.btn-login:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+}
+
+#send-btn:active,
+.login button[type="submit"]:active,
+.btn-login:active {
+  transform: translateY(-1px);
+}
+
+/* Botão secundário */
+#btn-to-transform {
+  background: transparent;
+  border: 2px solid var(--accent-primary);
+  color: var(--accent-primary);
+  padding: 12px 24px;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#btn-to-transform:hover {
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ================= ANIMAÇÕES ================= */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  100% {
-    filter:
-      drop-shadow(0 0 4px #4A90E2)
-      drop-shadow(0 0 8px #1F2A48)
-      drop-shadow(0 0 12px #A68CFF);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-
-/* Efeito de pulso leve */
-@keyframes logoPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
+/* ================= MENSAGENS DE ERRO ================= */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--status-danger);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
-/* ================= ANIMAÇÃO DE ENTRADA ================= */
-@keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+/* ================= LINKS EXTRAS ================= */
+.login-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
 
+.login-links a {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.login-links a:hover {
+  color: var(--accent-primary);
+}
+
+/* ================= RESPONSIVIDADE ================= */
+@media (max-width: 480px) {
+  .login {
+    padding: 32px 24px;
+    margin: 16px;
+  }
+  
+  .logo-container img {
+    width: 100px;
+  }
+  
+  .login h1,
+  .login h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .logo-container img {
+    width: 140px;
+  }
+  
+  .login {
+    padding: 48px;
+  }
+}
+
+/* ================= EFEITO GLOW NO CARD ================= */
+.login::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(135deg, 
+    rgba(99, 102, 241, 0.3), 
+    rgba(168, 85, 247, 0.1), 
+    rgba(99, 102, 241, 0.3));
+  border-radius: var(--radius-xl);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.login:hover::before {
+  opacity: 1;
 }

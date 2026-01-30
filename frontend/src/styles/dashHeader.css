@@ -1,106 +1,136 @@
+/* ===================================
+   DASHBOARD HEADER
+   Tema escuro consistente com o sistema
+   =================================== */
+
 .dash-header {
   position: fixed;
   top: 0;
-  left: 5vw;
-  width: 92.2vw;
-  height: 12vh;
-  padding: 0 25px;
+  left: 280px; /* Alinhado com a sidebar */
+  right: 0;
+  height: 70px;
+  padding: 0 32px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  background: #F5F7FA;
-  color: #2a2a2a;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  /* Tema escuro com glass morphism */
+  background: rgba(26, 26, 46, 0.95);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
 
-  z-index: 999;
-
-  font-family: "Poppins", sans-serif;
+  z-index: 100;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
-/* LEFT BUTTONS */
+/* BOTÕES DA ESQUERDA */
 .dash-left {
   display: flex;
-}
-
-.dash-btn {
-  background: #4A90E2;
-  box-shadow: 1px 1px 5px #2a2a2a;
-  color: white;
-  border: 1px solid rgba(0,0,0,0.1);
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-.dash-btn:hover {
-  background: rgba(0, 119, 255, 0.969);
-  transform: scale(1.03);
-}
-
-/* CENTER WELCOME */
-.dash-center {
-  text-align: center;
-  margin: 2vh -5vh -1vh 5vh;
-}
-
-.dash-center h1 {
-  font-size: 1.2rem;
-  margin: 0;
-  font-weight: 600;
-}
-
-.dash-center .user-role {
-  font-size: 0.9rem;
-  opacity: 0.7;
-}
-
-/* RIGHT USER INFO */
-.dash-right {
-  display: flex;
-  align-items: center;
-  text-align: right;
   gap: 12px;
 }
 
+.dash-btn {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.dash-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.dash-btn:active {
+  transform: translateY(0);
+}
+
+/* CENTRO - BOAS VINDAS */
+.dash-center {
+  text-align: center;
+  flex: 1;
+  padding: 0 20px;
+}
+
+.dash-center h1 {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.dash-center .user-role {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* DIREITA - INFO DO USUÁRIO */
+.dash-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .dash-avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #4A90E2;
+  border: 2px solid var(--accent-primary);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 .dash-info {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  text-align: right;
 }
 
 .dash-info .name {
-  font-weight: 700;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
 }
 
 .dash-info .role {
-  font-size: 0.85rem;
-  opacity: 0.7;
+  font-size: 0.8rem;
+  color: var(--accent-primary);
+  font-weight: 500;
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
+/* RESPONSIVIDADE */
+@media (max-width: 1024px) {
   .dash-header {
     left: 0;
-    width: 100vw;
+    padding: 0 20px;
+    height: 64px;
   }
+}
 
+@media (max-width: 768px) {
   .dash-left {
     display: none;
   }
 
   .dash-center h1 {
-    font-size: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .dash-info {
+    display: none;
   }
 }

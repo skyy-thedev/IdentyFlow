@@ -1,28 +1,61 @@
-.landing {
+/* ===================================
+   DASHBOARD LAYOUT PRINCIPAL
+   Sistema de layout flexível e responsivo
+   =================================== */
+
+.dashboard-container {
     display: flex;
-    position: fixed;
-    bottom: 1vh;
-    right: 1vw;
-    flex-direction: row;
-    justify-content: center;
-
-    /* 🎨 Fundo vidro azul translúcido */
-    background: rgba(0, 120, 255, 0.15); 
-
-    /* 🔵 Borda suave */
-    border: 1px solid rgba(255, 255, 255, 0.25);
-
-    color: #e8f4ff;
-    border-radius: 25px;
-    padding: 2vh;
-
-    width: 91.3vw;
-    height: 81.5vh;
-
-    /* ✨ Efeito extra opcional: glow azul muito suave */
-    box-shadow: 0 8px 20px rgba(0, 150, 255, 0.15);
+    min-height: 100vh;
+    background: var(--bg-primary);
 }
 
+/* Área principal de conteúdo */
+.landing {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: 280px; /* Espaço para sidebar/navbar */
+    padding: 24px;
+    min-height: 100vh;
+    background: var(--bg-primary);
+    overflow-x: hidden;
+}
+
+/* Container do conteúdo interno */
 .exibeContent {
-    overflow: auto;
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    margin-top: 80px; /* Espaço para header fixo */
+}
+
+/* ===================================
+   RESPONSIVIDADE
+   =================================== */
+
+@media (max-width: 1024px) {
+    .landing {
+        margin-left: 0;
+        padding: 16px;
+        padding-top: 80px;
+    }
+    
+    .exibeContent {
+        margin-top: 0;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .landing {
+        padding: 12px;
+    }
+    
+    .exibeContent {
+        padding: 12px;
+        border-radius: var(--radius-lg);
+    }
 }

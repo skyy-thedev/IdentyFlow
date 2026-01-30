@@ -35,15 +35,16 @@ function Dashboard({ showToast }) {
   };
 
   return (
-    <div className="  ">
+    <div className="dashboard-container">
       <NavBar onSelect={setCurrentSection} />
 
-      <div className="exibeContent">
+      <main className="landing">
         <DashHeader />
 
-        {/* exibição da seção atual */}
-        {renderContent()}
-      </div>
+        <div className="exibeContent">
+          {renderContent()}
+        </div>
+      </main>
     </div>
   );
 }

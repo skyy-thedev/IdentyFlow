@@ -1,129 +1,104 @@
+/* ===================================
+   ADD USER / EDIT USER FORM
+   Tema escuro consistente
+   =================================== */
+
 .adduser-container {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   padding: 0;
   width: 100%;
-  color: white;
+  color: var(--text-primary);
   animation: fadeIn 0.4s ease-in-out;
 }
 
 .adduser-container h2 {
-  font-size: 1.8rem;
-  margin-bottom: 15px;
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-form {
-  background: rgba(255,255,255,0.05);
-  padding: 25px;
-  border-radius: 12px;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 0 12px #4A90E2;
+.adduser-container form {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
-.form-group {
-  margin-bottom: 18px;
+.adduser-container .form-group {
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
 }
 
-label {
-  margin-bottom: 6px;
+.adduser-container label {
+  margin-bottom: 8px;
   font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
-input {
-  text-align: center;
-  width: 93%;
-}
-
-input,
-select {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(0,0,0,0.35);
-  color: #fff;
-  outline: none;
-  transition: 0.2s;
-}
-
-input:focus,
-select:focus {
-  border-color: #4A90E2;
-  box-shadow: 0 0 12px #4A90E2;
-}
-
-.readonly {
-  background: rgba(255,255,255,0.08);
-}
-
-.btn-save-user {
+.adduser-container input {
+  text-align: left;
   width: 100%;
-  background: linear-gradient(135deg, #4A90E2, #7b5dfa);
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: 0.2s;
-  box-shadow: 0 0 10px #4A90E2;
 }
 
-.btn-save-user:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 18px #4A90E2;
+.adduser-container input,
+.adduser-container select {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
 }
 
-/* OVERLAY */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.65);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.2s ease-in-out;
-  z-index: 999;
+.adduser-container input:focus,
+.adduser-container select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-/* MODAL BOX */
-.modal-content {
-  background: rgba(20,20,30,0.95);
-  padding: 5vh;
-  border-radius: 12px;
-  width: 30vw;
-  max-height: 85vh;
-  color: white;
-  overflow-y: hidden;
-  box-shadow: 0 0 20px #4A90E2;
-  position: relative;
-  animation: scaleIn 0.25s ease;
+.adduser-container input::placeholder {
+  color: var(--text-muted);
 }
 
-/* BOTÃO X */
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
+.adduser-container .readonly {
+  background: var(--bg-tertiary);
   opacity: 0.7;
-  transition: 0.2s;
+  cursor: not-allowed;
 }
 
-.modal-close:hover {
-  opacity: 1;
-  transform: scale(1.1);
+.adduser-container .btn-save-user {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+.adduser-container .btn-save-user:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+.adduser-container .btn-save-user:active {
+  transform: translateY(0);
 }
 
 /* ANIMAÇÕES */
@@ -140,7 +115,7 @@ select:focus {
 
 @keyframes scaleIn {
   from { 
-    transform: scale(0.85); 
+    transform: scale(0.9); 
     opacity: 0; 
   }
   to { 

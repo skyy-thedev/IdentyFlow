@@ -1,72 +1,97 @@
+/* ===================================
+   CADASTRO DE ALUNOS
+   Tema escuro consistente
+   =================================== */
+
 .page {
-  color: #000;
+  color: var(--text-primary);
   display: flex;
-  margin-left: 12vh;
   justify-content: center;
   align-items: flex-start;
-  padding: 20px;
+  padding: 24px;
   flex-wrap: wrap;
-  width: 100vw;
-  height: 85vh;
-  transform: scale(0.85);
+  width: 100%;
+  min-height: calc(100vh - 120px);
 }
 
 .card {
-  margin-top: 30px;
-  background-color: #fff;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 90vw;
-  padding: 20px;
-  border-radius: 19px;
+  max-width: 1200px;
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
 }
 
-h1 {
+.card h1 {
   text-align: center;
-  margin-bottom: 15px;
-  font-size: 22px;
+  margin-bottom: 24px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-label {
-  font-weight: bold;
+.card label {
+  font-weight: 600;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
-input#nome , #telefone, #email, #dataNascimento, #documento, #dataCadastro, #endereco, #escolaridade {
-  background-color: #102946;
-  color: #fff;
+/* Inputs com tema escuro */
+input#nome, 
+#telefone, 
+#email, 
+#dataNascimento, 
+#documento, 
+#dataCadastro, 
+#endereco, 
+#escolaridade,
+.card input,
+.card select {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
-input::placeholder {
-  color: #fff;
+.card input::placeholder {
+  color: var(--text-muted);
 }
 
-input,
-select {
+.card input,
+.card select {
   width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
   outline: none;
-  text-align: center;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.2rem;
+  font-family: 'Inter', 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: all 0.2s ease;
 }
 
-input:focus,
-select:focus {
-  border-color: #4a90e2;
+.card input:focus,
+.card select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  margin-top: -20px;
-  gap: 20px;
+  gap: 24px;
   box-shadow: none;
-  color: #000;
+  color: var(--text-primary);
 }
 
 .grid {
@@ -85,65 +110,106 @@ select:focus {
 
 .checkbox-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13vw, 1fr));
-  gap: 2vh 0vh;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
   margin: 0;
 }
 
 .form-group p {
   margin: 0 auto;
-  font-size: 1.4rem;
-  padding: 0 0 2vh 0;
+  font-size: 1.1rem;
+  padding: 0 0 16px 0;
+  color: var(--text-secondary);
+  font-weight: 600;
 }
 
+/* Cards de checkbox para cursos */
 .checkbox {
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 13vw;
-  height: 70%;
-  background-color: #20354b;
-  border-radius: 15px;
-  transition: all 0.2s ease-in-out;
-  font-weight: normal;
-  color: white;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: var(--text-primary);
   align-items: center;
+  justify-content: center;
   cursor: pointer;
-  padding: 5px;
+  padding: 16px;
+  min-height: 80px;
+}
+
+.checkbox:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .checkbox:has(input:checked) {
-  background-color: #4a90e2;
-  transform: scale(1.0);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  border-color: transparent;
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
 }
 
 .checkbox p {
   text-align: center;
-  margin-top: -1vh;
-  font-size: 1rem;
-  width: 13vw;
+  margin: 0;
+  font-size: 0.95rem;
+  color: inherit;
 }
 
 .checkbox-round {
   visibility: hidden;
-  background-color: #20354b00;
+  position: absolute;
 }
 
+/* Botão de cadastro */
 .cadastro-btn {
   align-self: center;
-  margin-top: 20px;
-  width: 30%;
-  padding: 14px;
-  font-size: 22px;
-  border-radius: 10px;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 300px;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: var(--radius-lg);
   border: none;
-  background: #4a90e2;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
 }
 
 .cadastro-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 3px 10px #000;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+.cadastro-btn:active {
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .card {
+    padding: 20px;
+  }
+  
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .cadastro-btn {
+    width: 100%;
+    max-width: none;
+  }
 }
