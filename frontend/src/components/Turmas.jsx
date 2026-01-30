@@ -322,7 +322,7 @@ export default function Turmas() {
                 <option value="">Selecione um curso</option>
                 {Array.isArray(cursos) && cursos.map(curso => (
                   <option key={curso._id} value={curso._id}>
-                    {curso.titulo}
+                    {curso.nome}
                   </option>
                 ))}
               </select>
