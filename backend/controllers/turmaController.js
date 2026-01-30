@@ -1,11 +1,21 @@
 const Turma = require("../models/Turma");
 const Aluno = require("../models/Aluno");
+const User = require("../models/User");
 
 // Listar todas as turmas
 exports.getTurmas = async (req, res) => {
   try {
-    const turmas = await Turma.find()
-      .populate("cursoId", "titulo")
+    const { role, id } = req.user || {};
+    
+    // Se for instrutor, mostrar apenas suas turmas
+    let query = {};
+    if (role === "instrutor") {
+      query.instrutorId = id;
+    }
+    
+    const turmas = await Turma.find(query)
+      .populate("cursoId", "titulo nome valorTotal")
+      .populate("instrutorId", "nome email")
       .sort({ createdAt: -1 });
 
     // Contar alunos por turma
@@ -23,6 +33,20 @@ exports.getTurmas = async (req, res) => {
   } catch (error) {
     console.error("Erro ao buscar turmas:", error);
     res.status(500).json({ message: "Erro ao buscar turmas", error: error.message });
+  }
+};
+
+// Listar instrutores disponíveis
+exports.getInstrutores = async (req, res) => {
+  try {
+    const instrutores = await User.find({ role: "instrutor" })
+      .select("nome email _id")
+      .sort({ nome: 1 });
+    
+    res.json(instrutores);
+  } catch (error) {
+    console.error("Erro ao buscar instrutores:", error);
+    res.status(500).json({ message: "Erro ao buscar instrutores", error: error.message });
   }
 };
 
@@ -51,11 +75,12 @@ exports.getTurmaById = async (req, res) => {
 // Criar nova turma
 exports.createTurma = async (req, res) => {
   try {
-    const { nome, cursoId, dataInicio, dataFim, horario, capacidade, status } = req.body;
+    const { nome, cursoId, instrutorId, dataInicio, dataFim, horario, capacidade, status } = req.body;
 
     const turma = new Turma({
       nome,
       cursoId,
+      instrutorId,
       dataInicio,
       dataFim,
       horario,
@@ -67,7 +92,8 @@ exports.createTurma = async (req, res) => {
     await turma.save();
 
     const turmaPopulada = await Turma.findById(turma._id)
-      .populate("cursoId", "titulo");
+      .populate("cursoId", "titulo nome")
+      .populate("instrutorId", "nome");
 
     res.status(201).json(turmaPopulada);
   } catch (error) {
@@ -79,13 +105,14 @@ exports.createTurma = async (req, res) => {
 // Atualizar turma
 exports.updateTurma = async (req, res) => {
   try {
-    const { nome, cursoId, dataInicio, dataFim, horario, capacidade, status } = req.body;
+    const { nome, cursoId, instrutorId, dataInicio, dataFim, horario, capacidade, status } = req.body;
 
     const turma = await Turma.findByIdAndUpdate(
       req.params.id,
-      { nome, cursoId, dataInicio, dataFim, horario, capacidade, status },
+      { nome, cursoId, instrutorId, dataInicio, dataFim, horario, capacidade, status },
       { new: true, runValidators: true }
-    ).populate("cursoId", "titulo");
+    ).populate("cursoId", "titulo nome")
+     .populate("instrutorId", "nome");
 
     if (!turma) {
       return res.status(404).json({ message: "Turma não encontrada" });

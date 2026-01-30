@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { useAuth } from "../contexts/AuthContext";
 import { useRole } from "./RoleGuard";
 import "../styles/historicoComponent.css";
 
 export default function Historico({ showToast }) {
-  const { user } = useAuth();
   const { isInstrutor } = useRole();
   
   const [alunos, setAlunos] = useState([]);
@@ -24,13 +22,8 @@ export default function Historico({ showToast }) {
   useEffect(() => {
     const fetchAlunos = async () => {
       try {
-        let res;
-        if (isInstrutor && user?.id) {
-          // Instrutor vê apenas alunos das suas turmas
-          res = await api.get(`/alunos?instrutorId=${user.id}`);
-        } else {
-          res = await api.get("/alunos");
-        }
+        // A rota /alunos já filtra automaticamente por role no backend
+        const res = await api.get("/alunos");
         setAlunos(res.data.alunos || res.data);
       } catch (error) {
         console.error("Erro ao buscar alunos:", error);
@@ -42,7 +35,7 @@ export default function Historico({ showToast }) {
     };
 
     fetchAlunos();
-  }, [showToast, isInstrutor, user?.id]);
+  }, [showToast]);
 
   const alunosFiltrados = alunos.filter((aluno) => {
   const nomeMatch = aluno.nome

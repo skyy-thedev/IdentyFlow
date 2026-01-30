@@ -17,11 +17,13 @@ import Modal from "./Modal";
 import '../styles/turmas.css';
 
 export default function Turmas() {
+  // eslint-disable-next-line no-unused-vars
   const { user } = useAuth();
   const { canEdit, canDelete, isInstrutor } = useRole();
   
   const [turmas, setTurmas] = useState([]);
   const [cursos, setCursos] = useState([]);
+  const [instrutores, setInstrutores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,6 +32,7 @@ export default function Turmas() {
   const [formData, setFormData] = useState({
     nome: "",
     cursoId: "",
+    instrutorId: "",
     dataInicio: "",
     dataFim: "",
     horario: "",
@@ -40,25 +43,33 @@ export default function Turmas() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [turmasRes, cursosRes] = await Promise.all([
+      const requests = [
         api.get("/turmas").catch(() => ({ data: [] })),
         api.get("/cursos").catch(() => ({ data: [] }))
-      ]);
+      ];
+      
+      // Só buscar instrutores se não for instrutor
+      if (!isInstrutor) {
+        requests.push(api.get("/turmas/instrutores").catch(() => ({ data: [] })));
+      }
+      
+      const [turmasRes, cursosRes, instrutoresRes] = await Promise.all(requests);
       
       // Garantir que turmas é sempre um array
       let turmasData = turmasRes.data;
       turmasData = Array.isArray(turmasData) ? turmasData : [];
-      
-      // Se for instrutor, filtrar apenas as turmas dele
-      if (isInstrutor && user?.id) {
-        turmasData = turmasData.filter(t => t.instrutorId === user.id);
-      }
       
       setTurmas(turmasData);
       
       // Garantir que cursos é sempre um array
       const cursosData = cursosRes.data;
       setCursos(Array.isArray(cursosData) ? cursosData : []);
+      
+      // Instrutores
+      if (instrutoresRes) {
+        const instrutoresData = instrutoresRes.data;
+        setInstrutores(Array.isArray(instrutoresData) ? instrutoresData : []);
+      }
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       showToast("Erro ao carregar turmas", "error");
@@ -91,6 +102,7 @@ export default function Turmas() {
     setFormData({
       nome: "",
       cursoId: "",
+      instrutorId: "",
       dataInicio: "",
       dataFim: "",
       horario: "",
@@ -108,7 +120,8 @@ export default function Turmas() {
     setEditingTurma(turma);
     setFormData({
       nome: turma.nome || "",
-      cursoId: turma.cursoId || "",
+      cursoId: turma.cursoId?._id || turma.cursoId || "",
+      instrutorId: turma.instrutorId?._id || turma.instrutorId || "",
       dataInicio: turma.dataInicio ? turma.dataInicio.split("T")[0] : "",
       dataFim: turma.dataFim ? turma.dataFim.split("T")[0] : "",
       horario: turma.horario || "",
@@ -313,6 +326,24 @@ export default function Turmas() {
                 ))}
               </select>
             </div>
+
+            {!isInstrutor && (
+              <div className="form-group">
+                <label>Instrutor Responsável</label>
+                <select
+                  name="instrutorId"
+                  value={formData.instrutorId}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Selecione um instrutor</option>
+                  {Array.isArray(instrutores) && instrutores.map(inst => (
+                    <option key={inst._id} value={inst._id}>
+                      {inst.name} ({inst.email})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="form-row">
               <div className="form-group">

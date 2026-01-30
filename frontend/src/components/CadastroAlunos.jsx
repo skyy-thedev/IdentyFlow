@@ -135,6 +135,14 @@ export default function CadastroAlunos({ showToast }) {
         ...prev,
         [cursoNome]: res.data
       }));
+      
+      // Auto-selecionar a turma se disponível
+      if (res.data?.proximaTurma?._id) {
+        setFormData(prev => ({
+          ...prev,
+          turmaId: res.data.proximaTurma._id
+        }));
+      }
     } catch (err) {
       console.error("Erro ao buscar turma:", err);
     } finally {
