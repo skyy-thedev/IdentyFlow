@@ -211,10 +211,11 @@ export default function CadastroAlunos({ showToast }) {
       });
       setDocumento("");
       setCursosInfo({});
-      console.log(formData);
     } catch (error) {
       console.error(error);
-      alert("Erro ao cadastrar aluno");
+      // Exibir mensagem de erro do backend
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || "Erro ao cadastrar aluno";
+      showToast(errorMessage, "error");
     }
   }
 

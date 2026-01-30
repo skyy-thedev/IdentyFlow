@@ -161,9 +161,14 @@ export default function Turmas() {
   };
 
   const getCursoNome = (cursoId) => {
+    // Se cursoId já veio populado do backend (objeto)
+    if (cursoId && typeof cursoId === "object") {
+      return cursoId.nome || cursoId.titulo || "Sem curso";
+    }
+    // Se é string, buscar na lista de cursos
     if (!Array.isArray(cursos)) return "Sem curso";
     const curso = cursos.find(c => c._id === cursoId);
-    return curso?.titulo || "Sem curso";
+    return curso?.nome || curso?.titulo || "Sem curso";
   };
 
   const getStatusClass = (status) => {

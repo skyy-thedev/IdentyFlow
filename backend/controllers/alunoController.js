@@ -3,13 +3,32 @@ const Turma = require("../models/Turma");
 
 exports.cadastrarAluno = async (req, res) => {
   try {
-    const { turmaId, cursos } = req.body;
+    const { turmaId } = req.body;
     
-    // Se tem turmaId, buscar o instrutor da turma
+    // Validar capacidade da turma se turmaId foi informado
     let instrutorId = req.body.instrutorId;
-    if (turmaId && !instrutorId) {
+    if (turmaId) {
       const turma = await Turma.findById(turmaId);
-      if (turma && turma.instrutorId) {
+      if (!turma) {
+        return res.status(400).json({
+          message: "Turma não encontrada",
+          error: "A turma selecionada não existe"
+        });
+      }
+      
+      // Contar alunos já cadastrados nesta turma
+      const alunosNaTurma = await Aluno.countDocuments({ turmaId });
+      
+      // Verificar se ainda há vagas
+      if (alunosNaTurma >= turma.capacidade) {
+        return res.status(400).json({
+          message: "Turma lotada",
+          error: `A turma "${turma.nome}" já atingiu a capacidade máxima de ${turma.capacidade} alunos`
+        });
+      }
+      
+      // Pegar instrutor da turma se não foi informado
+      if (!instrutorId && turma.instrutorId) {
         instrutorId = turma.instrutorId;
       }
     }
@@ -22,6 +41,7 @@ exports.cadastrarAluno = async (req, res) => {
     const aluno = await Aluno.create(alunoData);
     res.status(201).json(aluno);
   } catch (error) {
+    console.error("Erro ao cadastrar aluno:", error);
     res.status(400).json({
       message: "Erro ao cadastrar aluno",
       error: error.message,
