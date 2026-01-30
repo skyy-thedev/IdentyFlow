@@ -32,10 +32,6 @@ export default function Turmas() {
     status: "ativa"
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -52,6 +48,11 @@ export default function Turmas() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const showToast = (message, type) => {
     setToast({ show: true, message, type });
