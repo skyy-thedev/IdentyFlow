@@ -28,28 +28,36 @@ export default function Analytics() {
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      const [cursosRes, cadastrosRes, dashRes] = await Promise.all([
-        api.get("/stats/cursos-populares"),
-        api.get("/stats/cadastros-por-mes"),
-        api.get("/stats/dashboard")
+      
+      // Buscar dados do dashboard e analytics em paralelo
+      const [dashRes, analyticsRes] = await Promise.all([
+        api.get("/stats/dashboard"),
+        api.get("/stats/analytics")
       ]);
 
-      setCursosPopulares(Array.isArray(cursosRes.data) ? cursosRes.data : []);
-      setCadastrosPorMes(Array.isArray(cadastrosRes.data) ? cadastrosRes.data : []);
+      // Cursos populares do dashboard
+      const cursos = Array.isArray(dashRes.data?.cursosPorAluno) 
+        ? dashRes.data.cursosPorAluno.map(c => ({ nome: c._id, total: c.count }))
+        : [];
+      setCursosPopulares(cursos);
+      
+      // Cadastros por mês do analytics
+      const meses = Array.isArray(analyticsRes.data?.cadastrosPorMes) 
+        ? analyticsRes.data.cadastrosPorMes.map(m => ({ 
+            mes: m._id.mes, 
+            ano: m._id.ano, 
+            total: m.count 
+          }))
+        : [];
+      setCadastrosPorMes(meses);
       
       // Calcular crescimento
-      const meses = Array.isArray(cadastrosRes.data) ? cadastrosRes.data : [];
-      let crescimento = 0;
-      if (meses.length >= 2) {
-        const atual = meses[meses.length - 1]?.total || 0;
-        const anterior = meses[meses.length - 2]?.total || 1;
-        crescimento = Math.round(((atual - anterior) / anterior) * 100);
-      }
+      const crescimento = analyticsRes.data?.taxaCrescimento || 0;
 
       setStats({
         totalAlunos: dashRes.data?.totalAlunos || 0,
         totalCursos: dashRes.data?.totalCursos || 0,
-        alunosMes: dashRes.data?.cadastrosMes || 0,
+        alunosMes: analyticsRes.data?.alunosMesAtual || dashRes.data?.alunosRecentes || 0,
         crescimento
       });
     } catch (error) {
