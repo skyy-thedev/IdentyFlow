@@ -1,7 +1,9 @@
 import Inicio from './pages/home.jsx';
 import Dashboard from './pages/dashboard.jsx';
+import Planos from './pages/Planos.jsx';
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { SubscriptionProvider } from "./contexts/SubscriptionContext.jsx";
 import { Router, Route, Switch } from "wouter";
 import { useState } from "react";
 import Toast from "./components/Toast";
@@ -17,26 +19,34 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
-        <Switch>
+      <SubscriptionProvider>
+        <Router>
+          <Switch>
 
-          <Route path="/" component={Inicio} />
+            <Route path="/" component={Inicio} />
 
-          <Route path="/dashboard">
-            <ProtectedRoute roles={["admin", "instrutor", "god"]}>
-              <Dashboard showToast={showToast} />
+            <Route path="/planos">
+              <ProtectedRoute roles={["admin", "instrutor", "god"]}>
+                <Planos showToast={showToast} />
+              </ProtectedRoute>
+            </Route>
 
-              {toast && (
-                <Toast
-                  message={toast.message}
-                  type={toast.type}
-                />
-              )}
-            </ProtectedRoute>
-          </Route>
+            <Route path="/dashboard">
+              <ProtectedRoute roles={["admin", "instrutor", "god"]}>
+                <Dashboard showToast={showToast} />
 
-        </Switch>
-      </Router>
+                {toast && (
+                  <Toast
+                    message={toast.message}
+                    type={toast.type}
+                  />
+                )}
+              </ProtectedRoute>
+            </Route>
+
+          </Switch>
+        </Router>
+      </SubscriptionProvider>
     </AuthProvider>
   );
 }

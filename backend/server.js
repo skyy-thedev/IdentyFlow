@@ -8,6 +8,7 @@ const cursosRoutes = require("./routes/Cursos");
 const alunoRoutes = require("./routes/alunoRoutes");
 const statsRoutes = require("./routes/statsRoutes");
 const turmaRoutes = require("./routes/turmaRoutes");
+const subscriptionRoutes = require("./routes/subscriptionRoutes");
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use("/cursos", cursosRoutes);
 app.use("/alunos", alunoRoutes);
 app.use("/stats", statsRoutes);
 app.use("/turmas", turmaRoutes);
+app.use("/subscription", subscriptionRoutes);
 
 connectDB();
 

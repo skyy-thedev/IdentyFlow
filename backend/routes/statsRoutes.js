@@ -63,6 +63,8 @@ router.get("/dashboard", auth(["admin", "god", "instrutor"]), async (req, res) =
 // Estatísticas para Analytics (mais detalhadas)
 router.get("/analytics", auth(["admin", "god"]), async (req, res) => {
   try {
+    const hoje = new Date();
+    
     // Cadastros por mês (últimos 6 meses)
     const seisMesesAtras = new Date();
     seisMesesAtras.setMonth(seisMesesAtras.getMonth() - 6);
@@ -122,6 +124,131 @@ router.get("/analytics", auth(["admin", "god"]), async (req, res) => {
       ? ((alunosMesAtual - alunosMesAnterior) / alunosMesAnterior * 100).toFixed(1)
       : 100;
 
+    // ===== NOVAS MÉTRICAS =====
+    
+    // Alunos inscritos na semana
+    const seteDiasAtras = new Date();
+    seteDiasAtras.setDate(seteDiasAtras.getDate() - 7);
+    const alunosSemana = await Aluno.countDocuments({
+      createdAt: { $gte: seteDiasAtras }
+    });
+    
+    // Alunos inscritos no mês
+    const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    const alunosMes = await Aluno.countDocuments({
+      createdAt: { $gte: inicioMes }
+    });
+    
+    // Total de alunos no banco de dados
+    const totalAlunosDB = await Aluno.countDocuments();
+    
+    // Total de turmas
+    const totalTurmas = await Turma.countDocuments();
+    
+    // Média de alunos por turma
+    const alunosComTurma = await Aluno.countDocuments({ turmaId: { $exists: true, $ne: null } });
+    const turmasAtivas = await Turma.countDocuments({ status: "ativa" });
+    const mediaAlunosPorTurma = turmasAtivas > 0 ? (alunosComTurma / turmasAtivas).toFixed(1) : 0;
+    
+    // Total de alunos por turma (detalhado)
+    const alunosPorTurma = await Aluno.aggregate([
+      { $match: { turmaId: { $exists: true, $ne: null } } },
+      { $group: { _id: "$turmaId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 10 }
+    ]);
+    
+    // Buscar nomes das turmas
+    const turmaIds = alunosPorTurma.map(t => t._id);
+    const turmasInfo = await Turma.find({ _id: { $in: turmaIds } })
+      .populate("cursoId", "nome")
+      .select("_id nome horario cursoId");
+    
+    const turmaMap = {};
+    turmasInfo.forEach(t => {
+      turmaMap[t._id.toString()] = {
+        nome: t.cursoId?.nome || t.nome || "Turma",
+        horario: t.horario
+      };
+    });
+    
+    const alunosPorTurmaDetalhado = alunosPorTurma.map(t => ({
+      turmaId: t._id,
+      nome: turmaMap[t._id.toString()]?.nome || "N/A",
+      horario: turmaMap[t._id.toString()]?.horario || "",
+      total: t.count
+    }));
+    
+    // Total de alunos por curso
+    const alunosPorCurso = await Aluno.aggregate([
+      { $unwind: "$cursos" },
+      { $group: { _id: "$cursos", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+    
+    // ===== MÉTRICAS FINANCEIRAS (PREMIUM) =====
+    
+    // Buscar todos os cursos para pegar valores
+    const cursos = await Curso.find().select("nome valorTotal");
+    const cursoValorMap = {};
+    cursos.forEach(c => {
+      cursoValorMap[c.nome] = c.valorTotal || 0;
+    });
+    
+    // Faturamento mensal (baseado em alunos cadastrados no mês * valor do curso)
+    const alunosMesAtualCompleto = await Aluno.find({
+      createdAt: { $gte: inicioMes }
+    }).select("cursos");
+    
+    let faturamentoMes = 0;
+    alunosMesAtualCompleto.forEach(aluno => {
+      if (aluno.cursos && aluno.cursos.length > 0) {
+        aluno.cursos.forEach(curso => {
+          faturamentoMes += cursoValorMap[curso] || 0;
+        });
+      }
+    });
+    
+    // Faturamento anual
+    const inicioAno = new Date(hoje.getFullYear(), 0, 1);
+    const alunosAno = await Aluno.find({
+      createdAt: { $gte: inicioAno }
+    }).select("cursos");
+    
+    let faturamentoAnual = 0;
+    alunosAno.forEach(aluno => {
+      if (aluno.cursos && aluno.cursos.length > 0) {
+        aluno.cursos.forEach(curso => {
+          faturamentoAnual += cursoValorMap[curso] || 0;
+        });
+      }
+    });
+    
+    // Média de faturamento mensal (baseado nos últimos 6 meses)
+    const mesesPassados = hoje.getMonth() + 1;
+    const mediaFaturamentoMensal = mesesPassados > 0 ? faturamentoAnual / mesesPassados : 0;
+    
+    // Expectativa de faturamento próximos 60 dias (baseado em turmas ativas)
+    const sessentaDiasFrente = new Date();
+    sessentaDiasFrente.setDate(sessentaDiasFrente.getDate() + 60);
+    
+    const turmasProximas = await Turma.find({
+      status: "ativa",
+      dataInicio: { $gte: hoje, $lte: sessentaDiasFrente }
+    }).populate("cursoId", "valorTotal");
+    
+    let expectativaFaturamento = 0;
+    for (const turma of turmasProximas) {
+      const valorCurso = turma.cursoId?.valorTotal || 0;
+      // Estima baseado na capacidade da turma
+      expectativaFaturamento += valorCurso * (turma.capacidade || 20);
+    }
+    
+    // Se não houver turmas futuras, estima baseado na média mensal
+    if (expectativaFaturamento === 0) {
+      expectativaFaturamento = mediaFaturamentoMensal * 2;
+    }
+
     res.json({
       cadastrosPorMes,
       porEscolaridade,
@@ -129,7 +256,20 @@ router.get("/analytics", auth(["admin", "god"]), async (req, res) => {
       porDiaSemana,
       taxaCrescimento: parseFloat(taxaCrescimento),
       alunosMesAtual,
-      alunosMesAnterior
+      alunosMesAnterior,
+      // Novas métricas
+      alunosSemana,
+      alunosMes,
+      totalAlunosDB,
+      totalTurmas,
+      mediaAlunosPorTurma: parseFloat(mediaAlunosPorTurma),
+      alunosPorTurma: alunosPorTurmaDetalhado,
+      alunosPorCurso,
+      // Métricas financeiras (premium)
+      faturamentoMes,
+      faturamentoAnual,
+      mediaFaturamentoMensal: Math.round(mediaFaturamentoMensal),
+      expectativaFaturamento: Math.round(expectativaFaturamento)
     });
   } catch (err) {
     console.error("Erro ao buscar analytics:", err);

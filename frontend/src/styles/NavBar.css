@@ -234,16 +234,95 @@
     transform: translateX(0);
   }
   
+  /* Botão mobile para abrir sidebar */
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    z-index: 1001;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-menu-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  }
+  
+  .mobile-menu-btn img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+  
+  /* Botão para fechar sidebar no mobile */
+  .close-sidebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+  }
+  
+  .close-sidebar:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+  }
+  
   /* Overlay para mobile */
-  .sidebar.open::after {
-    content: '';
+  .sidebar-overlay {
+    display: none;
     position: fixed;
     top: 0;
-    left: 280px;
+    left: 0;
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+    z-index: 998;
+    backdrop-filter: blur(4px);
+    animation: fadeInOverlay 0.3s ease;
+  }
+  
+  .sidebar-overlay.active {
+    display: block;
+  }
+  
+  @keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* Ajustes da sidebar no mobile */
+  .sidebar.mobile.open .sidebar-header {
+    justify-content: space-between;
+  }
+  
+  .sidebar.mobile .item-text {
+    opacity: 1;
+  }
+}
+
+/* Esconder botão mobile em telas grandes */
+@media (min-width: 769px) {
+  .mobile-menu-btn,
+  .sidebar-overlay,
+  .close-sidebar {
+    display: none !important;
   }
 }
 
