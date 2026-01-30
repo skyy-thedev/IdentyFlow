@@ -330,6 +330,22 @@
   font-size: 1rem;
   color: var(--text-secondary, rgba(255, 255, 255, 0.7));
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.plan-price .preco-original {
+  text-decoration: line-through;
+  color: var(--text-muted, rgba(255, 255, 255, 0.4));
+  font-size: 0.85rem;
+}
+
+.plan-price .preco-promo {
+  color: #22c55e;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
 .plan-status {
@@ -338,19 +354,30 @@
   margin-bottom: 4px;
 }
 
-.plan-status span.ativa {
+.plan-status .status-ativa {
   color: #22c55e;
   font-weight: 500;
 }
 
-.plan-status span.cancelada {
+.plan-status .status-cancelada {
   color: #ef4444;
   font-weight: 500;
 }
 
-.plan-status span.pendente {
+.plan-status .status-pendente,
+.plan-status .status-expirada {
   color: #f59e0b;
   font-weight: 500;
+}
+
+.plan-auto-badge {
+  font-size: 0.8rem;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.15);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 6px;
+  display: inline-block;
 }
 
 .plan-expiry {

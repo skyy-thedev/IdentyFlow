@@ -38,8 +38,8 @@ export default function UserProfile({ showToast, onClose }) {
   useEffect(() => {
     const fetchAssinatura = async () => {
       try {
-        const res = await api.get("/subscriptions/minha");
-        setAssinatura(res.data);
+        const res = await api.get("/subscription/minha");
+        setAssinatura(res.data?.assinatura || res.data);
       } catch (err) {
         console.error("Erro ao buscar assinatura:", err);
       } finally {
@@ -260,14 +260,31 @@ export default function UserProfile({ showToast, onClose }) {
                     )}
                   </div>
                   <div className="plan-price">
-                    R$ {assinatura.plano === "premium" ? "199,90" : "79,90"}/mês
+                    {assinatura.plano === "premium" ? (
+                      <>
+                        <span className="preco-original">R$ 299,90</span>
+                        <span className="preco-promo">R$ 199,90/mês</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="preco-original">R$ 99,90</span>
+                        <span className="preco-promo">R$ 79,90/mês</span>
+                      </>
+                    )}
                   </div>
                   <div className="plan-status">
-                    Status: <span className={assinatura.status}>{assinatura.status}</span>
+                    Status: <span className={`status-${assinatura.status}`}>
+                      {assinatura.status === "ativa" ? "Ativo" : assinatura.status}
+                    </span>
                   </div>
-                  {assinatura.dataExpiracao && (
+                  {assinatura.dataExpiracao && !assinatura.isAutomatic && (
                     <div className="plan-expiry">
                       Válido até: {new Date(assinatura.dataExpiracao).toLocaleDateString("pt-BR")}
+                    </div>
+                  )}
+                  {assinatura.isAutomatic && (
+                    <div className="plan-auto-badge">
+                      ✨ Plano cortesia
                     </div>
                   )}
                 </div>
@@ -290,7 +307,10 @@ export default function UserProfile({ showToast, onClose }) {
                   <div className="plan-name">
                     <FiCheck className="icon-starter" /> Starter
                   </div>
-                  <div className="plan-price">R$ 79,90/mês</div>
+                  <div className="plan-price">
+                    <span className="preco-original">R$ 99,90</span>
+                    <span className="preco-promo">R$ 79,90/mês</span>
+                  </div>
                 </div>
                 <button 
                   type="button" 
