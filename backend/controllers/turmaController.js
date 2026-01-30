@@ -140,3 +140,83 @@ exports.getAlunosDaTurma = async (req, res) => {
     res.status(500).json({ message: "Erro ao buscar alunos", error: error.message });
   }
 };
+
+// Buscar próxima turma disponível para um curso
+exports.getProximaTurma = async (req, res) => {
+  try {
+    const { cursoNome } = req.params;
+    const Curso = require("../models/Cursos");
+    
+    // Buscar o curso pelo nome
+    const curso = await Curso.findOne({ 
+      nome: cursoNome,
+      $or: [{ ativo: true }, { ativo: { $exists: false } }]
+    });
+
+    if (!curso) {
+      return res.status(404).json({ 
+        message: "Curso não encontrado",
+        proximaTurma: null 
+      });
+    }
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    // Buscar próxima turma ativa com vagas disponíveis
+    const turma = await Turma.findOne({
+      cursoId: curso._id,
+      status: "ativa",
+      dataInicio: { $gte: hoje }
+    })
+    .populate("cursoId", "nome valorTotal cargaHoraria dias")
+    .sort({ dataInicio: 1 });
+
+    if (turma) {
+      // Contar alunos matriculados
+      const alunosMatriculados = await Aluno.countDocuments({ turmaId: turma._id });
+      const vagasDisponiveis = turma.capacidade - alunosMatriculados;
+
+      return res.json({
+        proximaTurma: {
+          _id: turma._id,
+          nome: turma.nome,
+          dataInicio: turma.dataInicio,
+          dataFim: turma.dataFim,
+          horario: turma.horario,
+          capacidade: turma.capacidade,
+          alunosMatriculados,
+          vagasDisponiveis,
+          curso: {
+            nome: curso.nome,
+            valorTotal: curso.valorTotal,
+            cargaHoraria: curso.cargaHoraria,
+            dias: curso.dias
+          }
+        }
+      });
+    }
+
+    // Se não há turma cadastrada, calcular próxima data baseada nos dias do curso
+    const diasParaProximaTurma = curso.dias || 30;
+    const proximaData = new Date();
+    proximaData.setDate(proximaData.getDate() + diasParaProximaTurma);
+
+    res.json({
+      proximaTurma: null,
+      sugestao: {
+        proximaDataDisponivel: proximaData,
+        mensagem: `Próxima turma prevista para ${proximaData.toLocaleDateString('pt-BR')}`,
+        curso: {
+          nome: curso.nome,
+          valorTotal: curso.valorTotal,
+          cargaHoraria: curso.cargaHoraria,
+          dias: curso.dias
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Erro ao buscar próxima turma:", error);
+    res.status(500).json({ message: "Erro ao buscar próxima turma", error: error.message });
+  }
+};

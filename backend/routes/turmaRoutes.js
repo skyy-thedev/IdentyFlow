@@ -6,6 +6,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 // Todas as rotas requerem autenticação
 // Rotas de turmas
 router.get("/", authMiddleware([]), turmaController.getTurmas);
+router.get("/proxima/:cursoNome", authMiddleware([]), turmaController.getProximaTurma);
 router.get("/:id", authMiddleware([]), turmaController.getTurmaById);
 router.post("/", authMiddleware(["god", "admin", "instrutor"]), turmaController.createTurma);
 router.put("/:id", authMiddleware(["god", "admin", "instrutor"]), turmaController.updateTurma);

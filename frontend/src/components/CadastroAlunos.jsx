@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
+import { FiCalendar, FiClock, FiUsers, FiDollarSign, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import "../styles/CadastroAlunos.css";
 
 
@@ -15,12 +16,17 @@ export default function CadastroAlunos({ showToast }) {
     endereco: "",
     escolaridade: "",
     cursos: [],
+    statusPagamento: "pendente",
+    formaPagamento: "",
+    turmaId: ""
   });
 
   const [documento, setDocumento] = useState("");
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
   const [cursos, setCursos] = useState("");
+  const [cursosInfo, setCursosInfo] = useState({}); // Info de turmas por curso
+  const [loadingTurma, setLoadingTurma] = useState(false);
 
   useEffect(() => {
     const hoje = new Date();
@@ -104,13 +110,71 @@ export default function CadastroAlunos({ showToast }) {
   }
 
   function handleCheckboxChange(curso) {
+    const nomeCurso = curso.nome || curso;
+    const novosCursos = formData.cursos.includes(nomeCurso)
+      ? formData.cursos.filter((c) => c !== nomeCurso)
+      : [...formData.cursos, nomeCurso];
+    
     setFormData((prev) => ({
       ...prev,
-      cursos: prev.cursos.includes(curso)
-        ? prev.cursos.filter((c) => c !== curso)
-        : [...prev.cursos, curso],
+      cursos: novosCursos,
     }));
+
+    // Buscar info da turma se curso foi adicionado
+    if (!formData.cursos.includes(nomeCurso)) {
+      fetchProximaTurma(nomeCurso);
+    }
   }
+
+  // Buscar próxima turma disponível para um curso
+  const fetchProximaTurma = async (cursoNome) => {
+    try {
+      setLoadingTurma(true);
+      const res = await api.get(`/turmas/proxima/${encodeURIComponent(cursoNome)}`);
+      setCursosInfo(prev => ({
+        ...prev,
+        [cursoNome]: res.data
+      }));
+    } catch (err) {
+      console.error("Erro ao buscar turma:", err);
+    } finally {
+      setLoadingTurma(false);
+    }
+  };
+
+  // Formatar valor em reais
+  const formatarValor = (valor) => {
+    if (!valor) return "R$ 0,00";
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(valor);
+  };
+
+  // Formatar data
+  const formatarData = (dataStr) => {
+    if (!dataStr) return "A definir";
+    const data = new Date(dataStr);
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  // Calcular valor total dos cursos selecionados
+  const calcularValorTotal = () => {
+    let total = 0;
+    formData.cursos.forEach(cursoNome => {
+      const info = cursosInfo[cursoNome];
+      if (info?.proximaTurma?.curso?.valorTotal) {
+        total += info.proximaTurma.curso.valorTotal;
+      } else if (info?.sugestao?.curso?.valorTotal) {
+        total += info.sugestao.curso.valorTotal;
+      }
+    });
+    return total;
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -133,8 +197,12 @@ export default function CadastroAlunos({ showToast }) {
         endereco: "",
         escolaridade: "",
         cursos: [],
+        statusPagamento: "pendente",
+        formaPagamento: "",
+        turmaId: ""
       });
       setDocumento("");
+      setCursosInfo({});
       console.log(formData);
     } catch (error) {
       console.error(error);
@@ -278,15 +346,22 @@ export default function CadastroAlunos({ showToast }) {
             ) : cursos.length > 0 ? (
               cursos.map((curso) => {
                 const nomeCurso = curso.nome || curso;
+                const isSelected = formData.cursos.includes(nomeCurso);
+                
                 return (
-                  <label key={nomeCurso} className="checkbox">
+                  <label key={nomeCurso} className={`checkbox ${isSelected ? 'selected' : ''}`}>
                     <input
                       type="checkbox"
                       className="checkbox-round"
-                      checked={formData.cursos.includes(nomeCurso)}
-                      onChange={() => handleCheckboxChange(nomeCurso)}
+                      checked={isSelected}
+                      onChange={() => handleCheckboxChange(curso)}
                     />
-                    <p>{nomeCurso}</p>
+                    <div className="curso-checkbox-content">
+                      <p className="curso-nome">{nomeCurso}</p>
+                      {curso.valorTotal && (
+                        <span className="curso-valor">{formatarValor(curso.valorTotal)}</span>
+                      )}
+                    </div>
                   </label>
                 );
               })
@@ -295,6 +370,114 @@ export default function CadastroAlunos({ showToast }) {
             )}
           </div>
         </div>
+
+          {/* Info das Turmas Selecionadas */}
+          {formData.cursos.length > 0 && (
+            <div className="turmas-info-section">
+              <p className="section-label">📅 Informações das Turmas:</p>
+              <div className="turmas-info-grid">
+                {formData.cursos.map(cursoNome => {
+                  const info = cursosInfo[cursoNome];
+                  const turma = info?.proximaTurma;
+                  const sugestao = info?.sugestao;
+                  
+                  return (
+                    <div key={cursoNome} className="turma-info-card">
+                      <div className="turma-info-header">
+                        <h4>{cursoNome}</h4>
+                        {turma ? (
+                          <span className="turma-status disponivel">
+                            <FiCheckCircle /> Turma Disponível
+                          </span>
+                        ) : (
+                          <span className="turma-status aguardando">
+                            <FiAlertCircle /> Aguardando Turma
+                          </span>
+                        )}
+                      </div>
+                      
+                      {turma ? (
+                        <div className="turma-info-body">
+                          <div className="turma-info-item">
+                            <FiCalendar />
+                            <span>Início: {formatarData(turma.dataInicio)}</span>
+                          </div>
+                          <div className="turma-info-item">
+                            <FiClock />
+                            <span>Horário: {turma.horario || "A definir"}</span>
+                          </div>
+                          <div className="turma-info-item">
+                            <FiUsers />
+                            <span>Vagas: {turma.vagasDisponiveis}/{turma.capacidade}</span>
+                          </div>
+                          <div className="turma-info-item valor">
+                            <FiDollarSign />
+                            <span>{formatarValor(turma.curso?.valorTotal)}</span>
+                          </div>
+                        </div>
+                      ) : sugestao ? (
+                        <div className="turma-info-body">
+                          <p className="sugestao-msg">{sugestao.mensagem}</p>
+                          <div className="turma-info-item valor">
+                            <FiDollarSign />
+                            <span>{formatarValor(sugestao.curso?.valorTotal)}</span>
+                          </div>
+                        </div>
+                      ) : loadingTurma ? (
+                        <p className="loading-turma">Buscando turma...</p>
+                      ) : (
+                        <p className="sem-info">Informações indisponíveis</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {/* Total e Status de Pagamento */}
+              <div className="pagamento-section">
+                <div className="valor-total">
+                  <span className="label">Valor Total:</span>
+                  <span className="valor">{formatarValor(calcularValorTotal())}</span>
+                </div>
+                
+                <div className="pagamento-grid">
+                  <div className="form-field">
+                    <label htmlFor="statusPagamento">Status do Pagamento</label>
+                    <select
+                      id="statusPagamento"
+                      name="statusPagamento"
+                      value={formData.statusPagamento}
+                      onChange={handleChange}
+                    >
+                      <option value="pendente">⏳ Pendente</option>
+                      <option value="pago">✅ Pago</option>
+                      <option value="parcial">🔄 Parcialmente Pago</option>
+                      <option value="isento">🎁 Isento</option>
+                    </select>
+                  </div>
+                  
+                  {formData.statusPagamento === "pago" && (
+                    <div className="form-field">
+                      <label htmlFor="formaPagamento">Forma de Pagamento</label>
+                      <select
+                        id="formaPagamento"
+                        name="formaPagamento"
+                        value={formData.formaPagamento}
+                        onChange={handleChange}
+                      >
+                        <option value="">Selecione</option>
+                        <option value="pix">💠 PIX</option>
+                        <option value="credito">💳 Cartão de Crédito</option>
+                        <option value="debito">💳 Cartão de Débito</option>
+                        <option value="dinheiro">💵 Dinheiro</option>
+                        <option value="boleto">📄 Boleto</option>
+                      </select>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           <button type="submit" className="cadastro-btn">
             Finalizar Cadastro

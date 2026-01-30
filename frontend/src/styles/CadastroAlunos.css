@@ -190,6 +190,225 @@ input#nome,
   transform: translateY(-1px);
 }
 
+/* Turma Info Card */
+.turma-info-card {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.turma-info-card h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.turma-info-card p {
+  margin: 4px 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.turma-info-card p strong {
+  color: var(--text-primary);
+}
+
+.turma-info-card .curso-valor {
+  margin-top: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.sem-turma-aviso {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.sem-turma-aviso p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #ef4444;
+  text-align: center;
+}
+
+/* Seção de Turmas Info */
+.turmas-info-section {
+  margin-top: 20px;
+  padding: 20px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.turmas-info-section .section-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+}
+
+.turmas-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.turma-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.turma-info-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.turma-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.turma-status.disponivel {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.turma-status.aguardando {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.turma-info-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.turma-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.turma-info-item svg {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.turma-info-item.valor {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.turma-info-item.valor span {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.sugestao-msg {
+  font-size: 0.85rem;
+  color: #eab308;
+  margin: 0;
+}
+
+.loading-turma {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.sem-info {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Seção de Pagamento */
+.pagamento-section {
+  margin-top: 20px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.valor-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+
+.valor-total .label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.valor-total .valor {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #10b981;
+}
+
+.pagamento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+/* Checkbox content */
+.curso-checkbox-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.curso-checkbox-content .curso-nome {
+  margin: 0;
+  font-weight: 500;
+}
+
+.curso-checkbox-content .curso-valor {
+  font-size: 0.75rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .card {
@@ -208,5 +427,38 @@ input#nome,
   .cadastro-btn {
     width: 100%;
     max-width: none;
+  }
+  
+  .turma-info-card {
+    padding: 10px;
+  }
+  
+  .turma-info-card .curso-valor {
+    font-size: 1rem;
+  }
+  
+  .turmas-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .turma-info-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .valor-total {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .pagamento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkbox-grid {
+    grid-template-columns: 1fr;
   }
 }
