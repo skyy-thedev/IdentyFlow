@@ -14,7 +14,7 @@ import api from "../services/api";
 import "../styles/UserProfile.css";
 
 export default function UserProfile({ showToast, onClose }) {
-  const { user, login } = useAuth();
+  const { user, updateUser } = useAuth();
   const fileInputRef = useRef(null);
   
   const [editing, setEditing] = useState(false);
@@ -90,15 +90,13 @@ export default function UserProfile({ showToast, onClose }) {
       });
       
       // Atualizar o contexto de auth com os novos dados
-      const updatedUser = res.data;
-      login({
-        id: updatedUser._id || user.id,
-        nome: updatedUser.nome,
-        email: updatedUser.email,
-        role: updatedUser.role || user.role,
-        telefone: updatedUser.telefone,
-        foto: updatedUser.foto
-      }, localStorage.getItem("token"));
+      const updatedUserData = res.data;
+      updateUser({
+        nome: updatedUserData.nome,
+        email: updatedUserData.email,
+        telefone: updatedUserData.telefone,
+        foto: updatedUserData.foto
+      });
       
       showToast?.("Perfil atualizado com sucesso!", "success");
       setEditing(false);

@@ -11,21 +11,38 @@ export function AuthProvider({ children }) {
   });
 
   // LOGIN REAL — dados vindos do backend (já no LoginForm)
+  // Agora salva todos os campos incluindo foto, email, telefone
   const login = (userData, token) => {
     const newUser = {
       id: userData.id,
       nome: userData.nome,
+      email: userData.email || "",
+      telefone: userData.telefone || "",
+      foto: userData.foto || "",
       role: userData.role,
       token: token
     };
 
     setUser(newUser);
     localStorage.setItem("user", JSON.stringify(newUser));
-    localStorage.setItem("token", token);
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+  };
+
+  // Atualizar dados do usuário (sem alterar o token)
+  const updateUser = (updatedData) => {
+    const newUser = {
+      ...user,
+      ...updatedData
+    };
+    setUser(newUser);
+    localStorage.setItem("user", JSON.stringify(newUser));
   };
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("user");
     localStorage.removeItem("token");
   };
 
@@ -40,7 +57,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, hasAccess }}>
+    <AuthContext.Provider value={{ user, login, updateUser, logout, hasAccess }}>
       {children}
     </AuthContext.Provider>
   );

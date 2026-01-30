@@ -26,6 +26,9 @@ module.exports = {
         user: {
           id: user._id,
           nome: user.nome,
+          email: user.email,
+          telefone: user.telefone || "",
+          foto: user.foto || "",
           role: user.role
         }
       });
