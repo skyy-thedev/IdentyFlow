@@ -16,21 +16,24 @@ function Dashboard({ showToast }) {
   const renderContent = () => {
     switch (currentSection) {
       case "dashboard":
-        return <DashboardHome showToast={showToast} />;
+        return <DashboardHome showToast={showToast} setActiveSection={setCurrentSection} />;
+      case "cadastroAlunos":
       case "cadastro":
         return <CadastroAlunos showToast={showToast} />;
-      case "turmas":
-        return <Turmas showToast={showToast} />;
+      case "alunos":
       case "historico":
         return <Historico showToast={showToast} />;
+      case "turmas":
+        return <Turmas showToast={showToast} />;
       case "analytics":
         return <Analytics showToast={showToast} />;
       case "cursos":
         return <CursosLista showToast={showToast} />;
+      case "usuarios":
       case "users":
         return <ListaUsuarios showToast={showToast} />;
       default:
-        return <DashboardHome showToast={showToast} />;
+        return <DashboardHome showToast={showToast} setActiveSection={setCurrentSection} />;
     }
   };
 
