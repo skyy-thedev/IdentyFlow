@@ -62,7 +62,8 @@ export default function Turmas() {
       setTurmas(turmasData);
       
       // Garantir que cursos é sempre um array
-      const cursosData = cursosRes.data;
+      // A API retorna { cursos: [...] } ou pode retornar array direto
+      const cursosData = cursosRes.data?.cursos || cursosRes.data;
       setCursos(Array.isArray(cursosData) ? cursosData : []);
       
       // Instrutores
