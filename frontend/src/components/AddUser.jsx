@@ -13,7 +13,6 @@ export default function AddUser({ onClose, onUserAdded }) {
   const [instrutoresSemAdmin, setInstrutoresSemAdmin] = useState([]);
   const [instrutorExistenteId, setInstrutorExistenteId] = useState("");
   const [admins, setAdmins] = useState([]);
-  const [senhaGerada, setSenhaGerada] = useState("");
   const [senhaExibida, setSenhaExibida] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
