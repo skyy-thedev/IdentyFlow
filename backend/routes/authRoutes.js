@@ -76,72 +76,102 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// POST /auth/instrutor - Admin cria instrutor vinculado a ele
+// Função para gerar senha aleatória segura
+function gerarSenha(tamanho = 8) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
+  let senha = '';
+  for (let i = 0; i < tamanho; i++) {
+    senha += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return senha;
+}
+
+// POST /auth/instrutor - Admin ou GOD cria instrutor OU GOD cria admin OU GOD vincula instrutor existente
 router.post("/instrutor", authMiddleware(["admin", "god"]), async (req, res) => {
   try {
-    const { nome, email, senha, telefone } = req.body;
-    const adminId = req.user.id;
-    const adminRole = req.user.role;
-    
-    if (!nome || !email || !senha) {
+    const { nome, email, telefone, role, adminPai, instrutorExistenteId } = req.body;
+    let { senha } = req.body;
+    const criadorId = req.user.id;
+    const criadorRole = req.user.role;
+
+    // GOD pode criar admin ou instrutor, admin só pode criar instrutor
+    const novoRole = criadorRole === "god" ? (role || "instrutor") : "instrutor";
+
+    // Vincular instrutor já existente
+    if (instrutorExistenteId && criadorRole === "god") {
+      const instrutor = await User.findById(instrutorExistenteId);
+      if (!instrutor || instrutor.role !== "instrutor") {
+        return res.status(404).json({ msg: "Instrutor não encontrado" });
+      }
+      instrutor.adminPai = adminPai || null;
+      await instrutor.save();
+      return res.status(200).json({ msg: "Instrutor vinculado com sucesso", user: instrutor });
+    }
+
+    if (!nome || !email) {
       return res.status(400).json({ msg: "Campos obrigatórios faltando" });
     }
-    
-    // Verificar limite de instrutores do plano
-    if (adminRole !== "god") {
-      const subscription = await Subscription.findOne({ 
-        userId: adminId, 
-        status: "ativa" 
-      });
-      
+
+    // Verificar limite de instrutores do plano (apenas para admin criando instrutor)
+    if (criadorRole === "admin" && novoRole === "instrutor") {
+      const subscription = await Subscription.findOne({ userId: criadorId, status: "ativa" });
       if (subscription) {
         const planoConfig = subscription.getPlanoConfig();
         const limiteInstrutores = planoConfig?.limites?.instrutores || 3;
-        
-        const instrutoresAtuais = await User.countDocuments({ adminPai: adminId });
-        
+        const instrutoresAtuais = await User.countDocuments({ adminPai: criadorId });
         if (instrutoresAtuais >= limiteInstrutores) {
-          return res.status(403).json({ 
-            msg: `Limite de ${limiteInstrutores} instrutores atingido para o plano ${planoConfig?.nome}`,
-            limite: limiteInstrutores,
-            atual: instrutoresAtuais
-          });
+          return res.status(403).json({ msg: `Limite de ${limiteInstrutores} instrutores atingido para o plano ${planoConfig?.nome}` });
         }
       }
     }
-    
+
     // Verificar se email já existe
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ msg: "Email já está em uso" });
     }
-    
+
+    // Gerar senha se não enviada
+    if (!senha) senha = gerarSenha(8);
     const salt = await bcrypt.genSalt(10);
     const hashedSenha = await bcrypt.hash(senha, salt);
-    
-    const newInstrutor = new User({
+
+    // GOD pode criar admin ou instrutor, admin só instrutor
+    const novoUser = new User({
       nome,
       email,
       senha: hashedSenha,
       telefone,
-      role: "instrutor",
-      adminPai: adminRole === "god" ? null : adminId // GOD não tem adminPai
+      role: novoRole,
+      adminPai: novoRole === "instrutor" ? (criadorRole === "god" ? (adminPai || null) : criadorId) : null
     });
-    
-    const savedInstrutor = await newInstrutor.save();
-    
-    res.status(201).json({ 
-      msg: "Instrutor criado com sucesso", 
+
+    const savedUser = await novoUser.save();
+
+    res.status(201).json({
+      msg: `${novoRole === "admin" ? "Admin" : "Instrutor"} criado com sucesso`,
       user: {
-        id: savedInstrutor._id,
-        nome: savedInstrutor.nome,
-        email: savedInstrutor.email,
-        role: savedInstrutor.role
-      }
+        id: savedUser._id,
+        nome: savedUser.nome,
+        email: savedUser.email,
+        role: savedUser.role,
+        adminPai: savedUser.adminPai
+      },
+      senhaGerada: senha
     });
   } catch (err) {
-    console.error("Erro ao criar instrutor:", err);
-    res.status(500).json({ msg: "Erro ao criar instrutor", error: err.message });
+    console.error("Erro ao criar usuário:", err);
+    res.status(500).json({ msg: "Erro ao criar usuário", error: err.message });
+  }
+});
+
+// GET /auth/instrutores-sem-admin - GOD lista instrutores sem adminPai
+router.get("/instrutores-sem-admin", authMiddleware(["god"]), async (req, res) => {
+  try {
+    const instrutores = await User.find({ role: "instrutor", $or: [ { adminPai: null }, { adminPai: { $exists: false } } ] });
+    res.json({ instrutores });
+  } catch (err) {
+    res.status(500).json({ msg: "Erro ao buscar instrutores", error: err.message });
   }
 });
 
@@ -169,10 +199,15 @@ router.put("/users/:id", authMiddleware([]), async (req, res) => {
     if (email) updateData.email = email;
     if (telefone !== undefined) updateData.telefone = telefone;
     if (foto !== undefined) updateData.foto = foto;
-    
+
     // Apenas GOD pode mudar a role (e não para god)
     if (role && req.user.role === "god" && role !== "god") {
       updateData.role = role;
+    }
+
+    // GOD pode alterar adminPai de qualquer usuário
+    if (req.user.role === "god" && adminPai !== undefined) {
+      updateData.adminPai = adminPai || null;
     }
     
     const updatedUser = await User.findByIdAndUpdate(

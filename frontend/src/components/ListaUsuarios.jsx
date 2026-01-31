@@ -19,7 +19,8 @@ export default function ListaUsuarios() {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [editFormData, setEditFormData] = useState({ nome: "", email: "", role: "" });
+  const [editFormData, setEditFormData] = useState({ nome: "", email: "", role: "", adminPai: "" });
+  const [admins, setAdmins] = useState([]);
 
   // Função para buscar usuários
   const fetchUsers = async () => {
@@ -56,19 +57,35 @@ export default function ListaUsuarios() {
     }
   };
 
-  const handleEditarClick = (usuario) => {
+  const handleEditarClick = async (usuario) => {
     setSelectedUser(usuario);
     setEditFormData({
       nome: usuario.nome,
       email: usuario.email,
-      role: usuario.role
+      role: usuario.role,
+      adminPai: usuario.adminPai?._id || ""
     });
+    // Se GOD, buscar admins disponíveis
+    if (isGod) {
+      try {
+        const res = await api.get("/auth/users");
+        const adminsList = (res.data.users || []).filter(u => u.role === "admin");
+        setAdmins(adminsList);
+      } catch (err) {
+        setAdmins([]);
+      }
+    }
     setShowEditModal(true);
   };
 
   const handleSalvarEdicao = async () => {
     try {
-      await api.put(`/auth/users/${selectedUser._id}`, editFormData);
+      const dataToSend = { ...editFormData };
+      // Só enviar adminPai se GOD e não for admin
+      if (!isGod || selectedUser.role === "admin") {
+        delete dataToSend.adminPai;
+      }
+      await api.put(`/auth/users/${selectedUser._id}`, dataToSend);
       await fetchUsers();
       setShowEditModal(false);
       setSelectedUser(null);
@@ -206,11 +223,27 @@ export default function ListaUsuarios() {
                 <select
                   value={editFormData.role}
                   onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
+                  disabled={selectedUser?.role === "god"}
                 >
                   <option value="instrutor">Instrutor</option>
                   <option value="admin">Admin</option>
                 </select>
               </div>
+              {/* GOD pode editar adminPai de instrutores */}
+              {isGod && editFormData.role === "instrutor" && (
+                <div className="form-group">
+                  <label>Admin Responsável</label>
+                  <select
+                    value={editFormData.adminPai || ""}
+                    onChange={e => setEditFormData({ ...editFormData, adminPai: e.target.value })}
+                  >
+                    <option value="">— Nenhum —</option>
+                    {admins.map(a => (
+                      <option key={a._id} value={a._id}>{a.nomeEmpresa || a.nome || a.email}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
             <div className="modal-actions">
               <button className="btn-modal cancelar" onClick={() => setShowEditModal(false)}>
