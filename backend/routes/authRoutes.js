@@ -179,7 +179,7 @@ router.get("/instrutores-sem-admin", authMiddleware(["god"]), async (req, res) =
 router.put("/users/:id", authMiddleware([]), async (req, res) => {
   try {
     const { id } = req.params;
-    const { nome, email, telefone, foto, role } = req.body;
+    const { nome, email, telefone, foto, role, adminPai } = req.body;
     
     // Verificar se é o próprio usuário ou admin/god
     if (req.user.id !== id && !["god", "admin"].includes(req.user.role)) {
@@ -207,7 +207,7 @@ router.put("/users/:id", authMiddleware([]), async (req, res) => {
 
     // GOD pode alterar adminPai de qualquer usuário
     if (req.user.role === "god" && adminPai !== undefined) {
-      updateData.adminPai = adminPai || null;
+      updateData.adminPai = (!adminPai || adminPai === "") ? null : adminPai;
     }
     
     const updatedUser = await User.findByIdAndUpdate(
@@ -219,11 +219,10 @@ router.put("/users/:id", authMiddleware([]), async (req, res) => {
     if (!updatedUser) {
       return res.status(404).json({ msg: "Usuário não encontrado" });
     }
-    
     res.json(updatedUser);
   } catch (err) {
     console.error("Erro ao atualizar usuário:", err);
-    res.status(500).json({ msg: "Erro ao atualizar usuário", error: err.message });
+    res.status(500).json({ msg: "Erro ao atualizar usuário", error: err.message, stack: err.stack });
   }
 });
 
